@@ -1,0 +1,1188 @@
+prog: SEMICOLON
+##
+## Ends in an error in state: 0.
+##
+## prog' -> . prog [ # ]
+##
+## The known suffix of the stack is as follows:
+##
+##
+
+expected an expression
+
+prog: SUB SEMICOLON
+##
+## Ends in an error in state: 2.
+##
+## expr -> SUB . expr [ SUB SEMICOLON RPAREN REM RCURLY RBRACK PIPE OR_KW NEQ MUL LSS LEQ LCURLY GTR GEQ EQL EOF DIV COMMA COLON ASSIGN ARROW AND_KW ADD ]
+##
+## The known suffix of the stack is as follows:
+## SUB
+##
+
+expected an expression after unary '-'
+
+prog: NOT SEMICOLON
+##
+## Ends in an error in state: 5.
+##
+## expr -> NOT . expr [ SUB SEMICOLON RPAREN REM RCURLY RBRACK PIPE OR_KW NEQ MUL LSS LEQ LCURLY GTR GEQ EQL EOF DIV COMMA COLON ASSIGN ARROW AND_KW ADD ]
+##
+## The known suffix of the stack is as follows:
+## NOT
+##
+
+expected an expression after unary '!'
+
+prog: MATCH_KW SEMICOLON
+##
+## Ends in an error in state: 7.
+##
+## match_expr -> MATCH_KW . expr LCURLY match_arms RCURLY [ SUB SEMICOLON RPAREN REM RCURLY RBRACK PIPE OR_KW NEQ MUL LSS LPAREN LEQ LCURLY LBRACK GTR GEQ EQL EOF DOT DIV COMMA COLON ASSIGN ARROW AND_KW ADD ]
+##
+## The known suffix of the stack is as follows:
+## MATCH_KW
+##
+
+expected a subject after 'match'
+
+prog: LPAREN SEMICOLON
+##
+## Ends in an error in state: 8.
+##
+## primary_expr -> LPAREN . expr RPAREN [ SUB SEMICOLON RPAREN REM RCURLY RBRACK PIPE OR_KW NEQ MUL LSS LPAREN LEQ LCURLY LBRACK GTR GEQ EQL EOF DOT DIV COMMA COLON ASSIGN ARROW AND_KW ADD ]
+##
+## The known suffix of the stack is as follows:
+## LPAREN
+##
+
+expected an expression after '('
+
+prog: LCURLY SEMICOLON
+##
+## Ends in an error in state: 9.
+##
+## block -> LCURLY . expr_list RCURLY [ SUB SEMICOLON RPAREN REM RCURLY RBRACK PIPE OR_KW NEQ MUL LSS LPAREN LEQ LCURLY LBRACK GTR GEQ EQL EOF DOT DIV COMMA COLON ASSIGN ARROW AND_KW ADD ]
+##
+## The known suffix of the stack is as follows:
+## LCURLY
+##
+
+expected an expression or '}' after '{'
+
+prog: FN_KW TRUE_KW
+##
+## Ends in an error in state: 14.
+##
+## func_expr -> FN_KW . LPAREN loption(separated_nonempty_list(COMMA,IDENT)) RPAREN block [ SUB SEMICOLON RPAREN REM RCURLY RBRACK PIPE OR_KW NEQ MUL LSS LPAREN LEQ LCURLY LBRACK GTR GEQ EQL EOF DOT DIV COMMA COLON ASSIGN ARROW AND_KW ADD ]
+##
+## The known suffix of the stack is as follows:
+## FN_KW
+##
+
+expected '(' after 'fn'
+
+prog: FN_KW LPAREN TRUE_KW
+##
+## Ends in an error in state: 15.
+##
+## func_expr -> FN_KW LPAREN . loption(separated_nonempty_list(COMMA,IDENT)) RPAREN block [ SUB SEMICOLON RPAREN REM RCURLY RBRACK PIPE OR_KW NEQ MUL LSS LPAREN LEQ LCURLY LBRACK GTR GEQ EQL EOF DOT DIV COMMA COLON ASSIGN ARROW AND_KW ADD ]
+##
+## The known suffix of the stack is as follows:
+## FN_KW LPAREN
+##
+
+expected a parameter name or ')' in function definition
+
+prog: FN_KW LPAREN IDENT TRUE_KW
+##
+## Ends in an error in state: 16.
+##
+## separated_nonempty_list(COMMA,IDENT) -> IDENT . [ RPAREN ]
+## separated_nonempty_list(COMMA,IDENT) -> IDENT . COMMA separated_nonempty_list(COMMA,IDENT) [ RPAREN ]
+##
+## The known suffix of the stack is as follows:
+## IDENT
+##
+
+expected ',' or ')' after parameter name
+
+prog: FN_KW LPAREN IDENT COMMA TRUE_KW
+##
+## Ends in an error in state: 17.
+##
+## separated_nonempty_list(COMMA,IDENT) -> IDENT COMMA . separated_nonempty_list(COMMA,IDENT) [ RPAREN ]
+##
+## The known suffix of the stack is as follows:
+## IDENT COMMA
+##
+
+expected a parameter name after ',' in parameter list
+
+prog: FN_KW LPAREN RPAREN TRUE_KW
+##
+## Ends in an error in state: 21.
+##
+## func_expr -> FN_KW LPAREN loption(separated_nonempty_list(COMMA,IDENT)) RPAREN . block [ SUB SEMICOLON RPAREN REM RCURLY RBRACK PIPE OR_KW NEQ MUL LSS LPAREN LEQ LCURLY LBRACK GTR GEQ EQL EOF DOT DIV COMMA COLON ASSIGN ARROW AND_KW ADD ]
+##
+## The known suffix of the stack is as follows:
+## FN_KW LPAREN loption(separated_nonempty_list(COMMA,IDENT)) RPAREN
+##
+
+expected '{' to start function body
+
+prog: LCURLY FALSE_KW EOF
+##
+## Ends in an error in state: 84.
+##
+## block -> LCURLY expr_list . RCURLY [ SUB SEMICOLON RPAREN REM RCURLY RBRACK PIPE OR_KW NEQ MUL LSS LPAREN LEQ LCURLY LBRACK GTR GEQ EQL EOF DOT DIV COMMA COLON ASSIGN ARROW AND_KW ADD ]
+##
+## The known suffix of the stack is as follows:
+## LCURLY expr_list
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 27, spurious reduction of production expr -> postfix_expr
+## In state 86, spurious reduction of production expr_list -> expr
+##
+
+unclosed delimiter: expected '}' to close block
+
+prog: FALSE_KW RPAREN
+##
+## Ends in an error in state: 86.
+##
+## expr -> expr . ADD expr [ SUB SEMICOLON REM RCURLY PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL EOF DIV ASSIGN AND_KW ADD ]
+## expr -> expr . SUB expr [ SUB SEMICOLON REM RCURLY PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL EOF DIV ASSIGN AND_KW ADD ]
+## expr -> expr . MUL expr [ SUB SEMICOLON REM RCURLY PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL EOF DIV ASSIGN AND_KW ADD ]
+## expr -> expr . DIV expr [ SUB SEMICOLON REM RCURLY PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL EOF DIV ASSIGN AND_KW ADD ]
+## expr -> expr . REM expr [ SUB SEMICOLON REM RCURLY PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL EOF DIV ASSIGN AND_KW ADD ]
+## expr -> expr . ASSIGN expr [ SUB SEMICOLON REM RCURLY PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL EOF DIV ASSIGN AND_KW ADD ]
+## expr -> expr . LSS expr [ SUB SEMICOLON REM RCURLY PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL EOF DIV ASSIGN AND_KW ADD ]
+## expr -> expr . GTR expr [ SUB SEMICOLON REM RCURLY PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL EOF DIV ASSIGN AND_KW ADD ]
+## expr -> expr . EQL expr [ SUB SEMICOLON REM RCURLY PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL EOF DIV ASSIGN AND_KW ADD ]
+## expr -> expr . NEQ expr [ SUB SEMICOLON REM RCURLY PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL EOF DIV ASSIGN AND_KW ADD ]
+## expr -> expr . LEQ expr [ SUB SEMICOLON REM RCURLY PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL EOF DIV ASSIGN AND_KW ADD ]
+## expr -> expr . GEQ expr [ SUB SEMICOLON REM RCURLY PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL EOF DIV ASSIGN AND_KW ADD ]
+## expr -> expr . AND_KW expr [ SUB SEMICOLON REM RCURLY PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL EOF DIV ASSIGN AND_KW ADD ]
+## expr -> expr . OR_KW expr [ SUB SEMICOLON REM RCURLY PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL EOF DIV ASSIGN AND_KW ADD ]
+## expr -> expr . PIPE expr [ SUB SEMICOLON REM RCURLY PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL EOF DIV ASSIGN AND_KW ADD ]
+## expr_list -> expr . [ RCURLY EOF ]
+## expr_list -> expr . SEMICOLON expr_list [ RCURLY EOF ]
+##
+## The known suffix of the stack is as follows:
+## expr
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 27, spurious reduction of production expr -> postfix_expr
+##
+
+unexpected ')': no matching '(' found
+
+prog: FALSE_KW SUB SEMICOLON
+##
+## Ends in an error in state: 37.
+##
+## expr -> expr SUB . expr [ SUB SEMICOLON RPAREN REM RCURLY RBRACK PIPE OR_KW NEQ MUL LSS LEQ LCURLY GTR GEQ EQL EOF DIV COMMA COLON ASSIGN ARROW AND_KW ADD ]
+##
+## The known suffix of the stack is as follows:
+## expr SUB
+##
+
+expected an expression after binary operator '-'
+
+prog: FALSE_KW REM SEMICOLON
+##
+## Ends in an error in state: 39.
+##
+## expr -> expr REM . expr [ SUB SEMICOLON RPAREN REM RCURLY RBRACK PIPE OR_KW NEQ MUL LSS LEQ LCURLY GTR GEQ EQL EOF DIV COMMA COLON ASSIGN ARROW AND_KW ADD ]
+##
+## The known suffix of the stack is as follows:
+## expr REM
+##
+
+expected an expression after binary operator '%'
+
+prog: FALSE_KW TRUE_KW
+##
+## Ends in an error in state: 27.
+##
+## expr -> postfix_expr . [ SUB SEMICOLON RPAREN REM RCURLY RBRACK PIPE OR_KW NEQ MUL LSS LEQ LCURLY GTR GEQ EQL EOF DIV COMMA COLON ASSIGN ARROW AND_KW ADD ]
+## postfix_expr -> postfix_expr . LPAREN loption(separated_nonempty_list(COMMA,expr)) RPAREN [ SUB SEMICOLON RPAREN REM RCURLY RBRACK PIPE OR_KW NEQ MUL LSS LPAREN LEQ LCURLY LBRACK GTR GEQ EQL EOF DOT DIV COMMA COLON ASSIGN ARROW AND_KW ADD ]
+## postfix_expr -> postfix_expr . DOT IDENT [ SUB SEMICOLON RPAREN REM RCURLY RBRACK PIPE OR_KW NEQ MUL LSS LPAREN LEQ LCURLY LBRACK GTR GEQ EQL EOF DOT DIV COMMA COLON ASSIGN ARROW AND_KW ADD ]
+## postfix_expr -> postfix_expr . LBRACK expr RBRACK [ SUB SEMICOLON RPAREN REM RCURLY RBRACK PIPE OR_KW NEQ MUL LSS LPAREN LEQ LCURLY LBRACK GTR GEQ EQL EOF DOT DIV COMMA COLON ASSIGN ARROW AND_KW ADD ]
+##
+## The known suffix of the stack is as follows:
+## postfix_expr
+##
+
+unexpected token; expected an operator or ';'
+
+prog: FALSE_KW LPAREN SEMICOLON
+##
+## Ends in an error in state: 28.
+##
+## postfix_expr -> postfix_expr LPAREN . loption(separated_nonempty_list(COMMA,expr)) RPAREN [ SUB SEMICOLON RPAREN REM RCURLY RBRACK PIPE OR_KW NEQ MUL LSS LPAREN LEQ LCURLY LBRACK GTR GEQ EQL EOF DOT DIV COMMA COLON ASSIGN ARROW AND_KW ADD ]
+##
+## The known suffix of the stack is as follows:
+## postfix_expr LPAREN
+##
+
+expected an expression or ')' in argument list
+
+prog: FALSE_KW LPAREN FALSE_KW SEMICOLON
+##
+## Ends in an error in state: 36.
+##
+## expr -> expr . ADD expr [ SUB RPAREN REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . SUB expr [ SUB RPAREN REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . MUL expr [ SUB RPAREN REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . DIV expr [ SUB RPAREN REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . REM expr [ SUB RPAREN REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . ASSIGN expr [ SUB RPAREN REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . LSS expr [ SUB RPAREN REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . GTR expr [ SUB RPAREN REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . EQL expr [ SUB RPAREN REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . NEQ expr [ SUB RPAREN REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . LEQ expr [ SUB RPAREN REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . GEQ expr [ SUB RPAREN REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . AND_KW expr [ SUB RPAREN REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . OR_KW expr [ SUB RPAREN REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . PIPE expr [ SUB RPAREN REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## separated_nonempty_list(COMMA,expr) -> expr . [ RPAREN ]
+## separated_nonempty_list(COMMA,expr) -> expr . COMMA separated_nonempty_list(COMMA,expr) [ RPAREN ]
+##
+## The known suffix of the stack is as follows:
+## expr
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 27, spurious reduction of production expr -> postfix_expr
+##
+
+expected ',' or ')' after argument expression
+
+prog: FALSE_KW PIPE SEMICOLON
+##
+## Ends in an error in state: 46.
+##
+## expr -> expr PIPE . expr [ SUB SEMICOLON RPAREN REM RCURLY RBRACK PIPE OR_KW NEQ MUL LSS LEQ LCURLY GTR GEQ EQL EOF DIV COMMA COLON ASSIGN ARROW AND_KW ADD ]
+##
+## The known suffix of the stack is as follows:
+## expr PIPE
+##
+
+expected an expression after pipe operator '|>'
+
+prog: FALSE_KW OR_KW SEMICOLON
+##
+## Ends in an error in state: 48.
+##
+## expr -> expr OR_KW . expr [ SUB SEMICOLON RPAREN REM RCURLY RBRACK PIPE OR_KW NEQ MUL LSS LEQ LCURLY GTR GEQ EQL EOF DIV COMMA COLON ASSIGN ARROW AND_KW ADD ]
+##
+## The known suffix of the stack is as follows:
+## expr OR_KW
+##
+
+expected an expression after 'or'
+
+prog: FALSE_KW NEQ SEMICOLON
+##
+## Ends in an error in state: 50.
+##
+## expr -> expr NEQ . expr [ SUB SEMICOLON RPAREN REM RCURLY RBRACK PIPE OR_KW NEQ MUL LSS LEQ LCURLY GTR GEQ EQL EOF DIV COMMA COLON ASSIGN ARROW AND_KW ADD ]
+##
+## The known suffix of the stack is as follows:
+## expr NEQ
+##
+
+expected an expression after binary operator '!='
+
+prog: FALSE_KW MUL SEMICOLON
+##
+## Ends in an error in state: 42.
+##
+## expr -> expr MUL . expr [ SUB SEMICOLON RPAREN REM RCURLY RBRACK PIPE OR_KW NEQ MUL LSS LEQ LCURLY GTR GEQ EQL EOF DIV COMMA COLON ASSIGN ARROW AND_KW ADD ]
+##
+## The known suffix of the stack is as follows:
+## expr MUL
+##
+
+expected an expression after binary operator '*'
+
+prog: FALSE_KW LSS SEMICOLON
+##
+## Ends in an error in state: 52.
+##
+## expr -> expr LSS . expr [ SUB SEMICOLON RPAREN REM RCURLY RBRACK PIPE OR_KW NEQ MUL LSS LEQ LCURLY GTR GEQ EQL EOF DIV COMMA COLON ASSIGN ARROW AND_KW ADD ]
+##
+## The known suffix of the stack is as follows:
+## expr LSS
+##
+
+expected an expression after binary operator '<'
+
+prog: FALSE_KW DIV SEMICOLON
+##
+## Ends in an error in state: 44.
+##
+## expr -> expr DIV . expr [ SUB SEMICOLON RPAREN REM RCURLY RBRACK PIPE OR_KW NEQ MUL LSS LEQ LCURLY GTR GEQ EQL EOF DIV COMMA COLON ASSIGN ARROW AND_KW ADD ]
+##
+## The known suffix of the stack is as follows:
+## expr DIV
+##
+
+expected an expression after binary operator '/'
+
+prog: FALSE_KW ADD SEMICOLON
+##
+## Ends in an error in state: 54.
+##
+## expr -> expr ADD . expr [ SUB SEMICOLON RPAREN REM RCURLY RBRACK PIPE OR_KW NEQ MUL LSS LEQ LCURLY GTR GEQ EQL EOF DIV COMMA COLON ASSIGN ARROW AND_KW ADD ]
+##
+## The known suffix of the stack is as follows:
+## expr ADD
+##
+
+expected an expression after binary operator '+'
+
+prog: FALSE_KW LEQ SEMICOLON
+##
+## Ends in an error in state: 56.
+##
+## expr -> expr LEQ . expr [ SUB SEMICOLON RPAREN REM RCURLY RBRACK PIPE OR_KW NEQ MUL LSS LEQ LCURLY GTR GEQ EQL EOF DIV COMMA COLON ASSIGN ARROW AND_KW ADD ]
+##
+## The known suffix of the stack is as follows:
+## expr LEQ
+##
+
+expected an expression after binary operator '<='
+
+prog: FALSE_KW GTR SEMICOLON
+##
+## Ends in an error in state: 58.
+##
+## expr -> expr GTR . expr [ SUB SEMICOLON RPAREN REM RCURLY RBRACK PIPE OR_KW NEQ MUL LSS LEQ LCURLY GTR GEQ EQL EOF DIV COMMA COLON ASSIGN ARROW AND_KW ADD ]
+##
+## The known suffix of the stack is as follows:
+## expr GTR
+##
+
+expected an expression after binary operator '>'
+
+prog: FALSE_KW GEQ SEMICOLON
+##
+## Ends in an error in state: 60.
+##
+## expr -> expr GEQ . expr [ SUB SEMICOLON RPAREN REM RCURLY RBRACK PIPE OR_KW NEQ MUL LSS LEQ LCURLY GTR GEQ EQL EOF DIV COMMA COLON ASSIGN ARROW AND_KW ADD ]
+##
+## The known suffix of the stack is as follows:
+## expr GEQ
+##
+
+expected an expression after binary operator '>='
+
+prog: FALSE_KW EQL SEMICOLON
+##
+## Ends in an error in state: 62.
+##
+## expr -> expr EQL . expr [ SUB SEMICOLON RPAREN REM RCURLY RBRACK PIPE OR_KW NEQ MUL LSS LEQ LCURLY GTR GEQ EQL EOF DIV COMMA COLON ASSIGN ARROW AND_KW ADD ]
+##
+## The known suffix of the stack is as follows:
+## expr EQL
+##
+
+expected an expression after binary operator '=='
+
+prog: FALSE_KW AND_KW SEMICOLON
+##
+## Ends in an error in state: 64.
+##
+## expr -> expr AND_KW . expr [ SUB SEMICOLON RPAREN REM RCURLY RBRACK PIPE OR_KW NEQ MUL LSS LEQ LCURLY GTR GEQ EQL EOF DIV COMMA COLON ASSIGN ARROW AND_KW ADD ]
+##
+## The known suffix of the stack is as follows:
+## expr AND_KW
+##
+
+expected an expression after 'and'
+
+prog: FALSE_KW LPAREN FALSE_KW COMMA SEMICOLON
+##
+## Ends in an error in state: 66.
+##
+## separated_nonempty_list(COMMA,expr) -> expr COMMA . separated_nonempty_list(COMMA,expr) [ RPAREN ]
+##
+## The known suffix of the stack is as follows:
+## expr COMMA
+##
+
+expected an expression after ',' in argument list
+
+prog: FALSE_KW ASSIGN SEMICOLON
+##
+## Ends in an error in state: 68.
+##
+## expr -> expr ASSIGN . expr [ SUB SEMICOLON RPAREN REM RCURLY RBRACK PIPE OR_KW NEQ MUL LSS LEQ LCURLY GTR GEQ EQL EOF DIV COMMA COLON ASSIGN ARROW AND_KW ADD ]
+##
+## The known suffix of the stack is as follows:
+## expr ASSIGN
+##
+
+expected an expression after '='
+
+prog: FALSE_KW SEMICOLON SEMICOLON
+##
+## Ends in an error in state: 87.
+##
+## expr_list -> expr SEMICOLON . expr_list [ RCURLY EOF ]
+##
+## The known suffix of the stack is as follows:
+## expr SEMICOLON
+##
+
+unexpected duplicate ';'
+
+prog: LPAREN FALSE_KW SEMICOLON
+##
+## Ends in an error in state: 89.
+##
+## expr -> expr . ADD expr [ SUB RPAREN REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . SUB expr [ SUB RPAREN REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . MUL expr [ SUB RPAREN REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . DIV expr [ SUB RPAREN REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . REM expr [ SUB RPAREN REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . ASSIGN expr [ SUB RPAREN REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . LSS expr [ SUB RPAREN REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . GTR expr [ SUB RPAREN REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . EQL expr [ SUB RPAREN REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . NEQ expr [ SUB RPAREN REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . LEQ expr [ SUB RPAREN REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . GEQ expr [ SUB RPAREN REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . AND_KW expr [ SUB RPAREN REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . OR_KW expr [ SUB RPAREN REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . PIPE expr [ SUB RPAREN REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## primary_expr -> LPAREN expr . RPAREN [ SUB SEMICOLON RPAREN REM RCURLY RBRACK PIPE OR_KW NEQ MUL LSS LPAREN LEQ LCURLY LBRACK GTR GEQ EQL EOF DOT DIV COMMA COLON ASSIGN ARROW AND_KW ADD ]
+##
+## The known suffix of the stack is as follows:
+## LPAREN expr
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 27, spurious reduction of production expr -> postfix_expr
+##
+
+unclosed delimiter: expected ')'
+
+prog: MATCH_KW FALSE_KW SEMICOLON
+##
+## Ends in an error in state: 91.
+##
+## expr -> expr . ADD expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ LCURLY GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . SUB expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ LCURLY GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . MUL expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ LCURLY GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . DIV expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ LCURLY GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . REM expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ LCURLY GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . ASSIGN expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ LCURLY GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . LSS expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ LCURLY GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . GTR expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ LCURLY GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . EQL expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ LCURLY GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . NEQ expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ LCURLY GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . LEQ expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ LCURLY GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . GEQ expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ LCURLY GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . AND_KW expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ LCURLY GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . OR_KW expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ LCURLY GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . PIPE expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ LCURLY GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## match_expr -> MATCH_KW expr . LCURLY match_arms RCURLY [ SUB SEMICOLON RPAREN REM RCURLY RBRACK PIPE OR_KW NEQ MUL LSS LPAREN LEQ LCURLY LBRACK GTR GEQ EQL EOF DOT DIV COMMA COLON ASSIGN ARROW AND_KW ADD ]
+##
+## The known suffix of the stack is as follows:
+## MATCH_KW expr
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 27, spurious reduction of production expr -> postfix_expr
+##
+
+expected '{' after 'match' expression
+
+prog: MATCH_KW FALSE_KW LCURLY SEMICOLON
+##
+## Ends in an error in state: 92.
+##
+## match_expr -> MATCH_KW expr LCURLY . match_arms RCURLY [ SUB SEMICOLON RPAREN REM RCURLY RBRACK PIPE OR_KW NEQ MUL LSS LPAREN LEQ LCURLY LBRACK GTR GEQ EQL EOF DOT DIV COMMA COLON ASSIGN ARROW AND_KW ADD ]
+##
+## The known suffix of the stack is as follows:
+## MATCH_KW expr LCURLY
+##
+
+expected pattern in match arm
+
+prog: MATCH_KW FALSE_KW LCURLY FALSE_KW SEMICOLON
+##
+## Ends in an error in state: 119.
+##
+## or_pattern -> or_pattern . BAR primary_pattern [ WHEN_KW RCURLY RBRACK COMMA BAR ARROW ]
+## pattern -> or_pattern . [ WHEN_KW RCURLY RBRACK COMMA ARROW ]
+##
+## The known suffix of the stack is as follows:
+## or_pattern
+##
+
+expected '->' after match pattern
+
+prog: MATCH_KW FALSE_KW LCURLY FALSE_KW ARROW SEMICOLON
+##
+## Ends in an error in state: 135.
+##
+## match_arm -> pattern option(guard) ARROW . expr [ RCURLY COMMA ]
+##
+## The known suffix of the stack is as follows:
+## pattern option(guard) ARROW
+##
+
+expected an expression after '->' in match arm
+
+prog: MATCH_KW FALSE_KW LCURLY FALSE_KW ARROW FALSE_KW SEMICOLON
+##
+## Ends in an error in state: 136.
+##
+## expr -> expr . ADD expr [ SUB REM RCURLY PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . SUB expr [ SUB REM RCURLY PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . MUL expr [ SUB REM RCURLY PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . DIV expr [ SUB REM RCURLY PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . REM expr [ SUB REM RCURLY PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . ASSIGN expr [ SUB REM RCURLY PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . LSS expr [ SUB REM RCURLY PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . GTR expr [ SUB REM RCURLY PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . EQL expr [ SUB REM RCURLY PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . NEQ expr [ SUB REM RCURLY PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . LEQ expr [ SUB REM RCURLY PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . GEQ expr [ SUB REM RCURLY PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . AND_KW expr [ SUB REM RCURLY PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . OR_KW expr [ SUB REM RCURLY PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . PIPE expr [ SUB REM RCURLY PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## match_arm -> pattern option(guard) ARROW expr . [ RCURLY COMMA ]
+##
+## The known suffix of the stack is as follows:
+## pattern option(guard) ARROW expr
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 27, spurious reduction of production expr -> postfix_expr
+##
+
+expected ',' or '}' after match arm
+
+prog: MATCH_KW FALSE_KW LCURLY FALSE_KW ARROW FALSE_KW COMMA SEMICOLON
+##
+## Ends in an error in state: 141.
+##
+## match_arms -> match_arm COMMA . [ RCURLY ]
+## match_arms -> match_arm COMMA . match_arms [ RCURLY ]
+##
+## The known suffix of the stack is as follows:
+## match_arm COMMA
+##
+
+expected a pattern or '}' after ',' in match
+
+prog: FALSE_KW RCURLY
+##
+## Ends in an error in state: 155.
+##
+## prog -> expr_list . EOF [ # ]
+##
+## The known suffix of the stack is as follows:
+## expr_list
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 27, spurious reduction of production expr -> postfix_expr
+## In state 86, spurious reduction of production expr_list -> expr
+##
+
+unexpected '}': no matching '{' found
+
+prog: MATCH_KW FALSE_KW LCURLY SUB WHEN_KW
+##
+## Ends in an error in state: 94.
+##
+## literal_pattern -> SUB . INT [ WHEN_KW RCURLY RBRACK COMMA BAR ARROW ]
+##
+## The known suffix of the stack is as follows:
+## SUB
+##
+
+expected an integer literal after '-' in pattern
+
+prog: MATCH_KW FALSE_KW LCURLY FALSE_KW WHEN_KW WHEN_KW
+##
+## Ends in an error in state: 132.
+##
+## guard -> WHEN_KW . expr [ ARROW ]
+##
+## The known suffix of the stack is as follows:
+## WHEN_KW
+##
+
+expected a condition after 'when' in match guard
+
+prog: MATCH_KW FALSE_KW LCURLY FALSE_KW WHEN_KW FALSE_KW SEMICOLON
+##
+## Ends in an error in state: 133.
+##
+## expr -> expr . ADD expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN ARROW AND_KW ADD ]
+## expr -> expr . SUB expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN ARROW AND_KW ADD ]
+## expr -> expr . MUL expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN ARROW AND_KW ADD ]
+## expr -> expr . DIV expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN ARROW AND_KW ADD ]
+## expr -> expr . REM expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN ARROW AND_KW ADD ]
+## expr -> expr . ASSIGN expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN ARROW AND_KW ADD ]
+## expr -> expr . LSS expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN ARROW AND_KW ADD ]
+## expr -> expr . GTR expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN ARROW AND_KW ADD ]
+## expr -> expr . EQL expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN ARROW AND_KW ADD ]
+## expr -> expr . NEQ expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN ARROW AND_KW ADD ]
+## expr -> expr . LEQ expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN ARROW AND_KW ADD ]
+## expr -> expr . GEQ expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN ARROW AND_KW ADD ]
+## expr -> expr . AND_KW expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN ARROW AND_KW ADD ]
+## expr -> expr . OR_KW expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN ARROW AND_KW ADD ]
+## expr -> expr . PIPE expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN ARROW AND_KW ADD ]
+## guard -> WHEN_KW expr . [ ARROW ]
+##
+## The known suffix of the stack is as follows:
+## WHEN_KW expr
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 27, spurious reduction of production expr -> postfix_expr
+##
+
+expected '->' after match guard
+
+prog: MATCH_KW FALSE_KW LCURLY FALSE_KW BAR WHEN_KW
+##
+## Ends in an error in state: 120.
+##
+## or_pattern -> or_pattern BAR . primary_pattern [ WHEN_KW RCURLY RBRACK COMMA BAR ARROW ]
+##
+## The known suffix of the stack is as follows:
+## or_pattern BAR
+##
+
+expected a pattern after '|'
+
+prog: PERCENT_LCURLY WHEN_KW
+##
+## Ends in an error in state: 4.
+##
+## map_expr -> PERCENT_LCURLY . loption(separated_nonempty_list(COMMA,map_entry)) RCURLY [ SUB SEMICOLON RPAREN REM RCURLY RBRACK PIPE OR_KW NEQ MUL LSS LPAREN LEQ LCURLY LBRACK GTR GEQ EQL EOF DOT DIV COMMA COLON ASSIGN ARROW AND_KW ADD ]
+##
+## The known suffix of the stack is as follows:
+## PERCENT_LCURLY
+##
+
+expected a map entry or '}' after '%{' in map
+
+prog: LBRACK WHEN_KW
+##
+## Ends in an error in state: 10.
+##
+## list_expr -> LBRACK . RBRACK [ SUB SEMICOLON RPAREN REM RCURLY RBRACK PIPE OR_KW NEQ MUL LSS LPAREN LEQ LCURLY LBRACK GTR GEQ EQL EOF DOT DIV COMMA COLON ASSIGN ARROW AND_KW ADD ]
+## list_expr -> LBRACK . DOTDOT expr RBRACK [ SUB SEMICOLON RPAREN REM RCURLY RBRACK PIPE OR_KW NEQ MUL LSS LPAREN LEQ LCURLY LBRACK GTR GEQ EQL EOF DOT DIV COMMA COLON ASSIGN ARROW AND_KW ADD ]
+## list_expr -> LBRACK . list_elems RBRACK [ SUB SEMICOLON RPAREN REM RCURLY RBRACK PIPE OR_KW NEQ MUL LSS LPAREN LEQ LCURLY LBRACK GTR GEQ EQL EOF DOT DIV COMMA COLON ASSIGN ARROW AND_KW ADD ]
+##
+## The known suffix of the stack is as follows:
+## LBRACK
+##
+
+expected a list element or ']' after '[' in list
+
+prog: FALSE_KW LBRACK WHEN_KW
+##
+## Ends in an error in state: 70.
+##
+## postfix_expr -> postfix_expr LBRACK . expr RBRACK [ SUB SEMICOLON RPAREN REM RCURLY RBRACK PIPE OR_KW NEQ MUL LSS LPAREN LEQ LCURLY LBRACK GTR GEQ EQL EOF DOT DIV COMMA COLON ASSIGN ARROW AND_KW ADD ]
+##
+## The known suffix of the stack is as follows:
+## postfix_expr LBRACK
+##
+
+expected an expression after '[' in index
+
+prog: FALSE_KW LBRACK FALSE_KW SEMICOLON
+##
+## Ends in an error in state: 71.
+##
+## expr -> expr . ADD expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . SUB expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . MUL expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . DIV expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . REM expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . ASSIGN expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . LSS expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . GTR expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . EQL expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . NEQ expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . LEQ expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . GEQ expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . AND_KW expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . OR_KW expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . PIPE expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## postfix_expr -> postfix_expr LBRACK expr . RBRACK [ SUB SEMICOLON RPAREN REM RCURLY RBRACK PIPE OR_KW NEQ MUL LSS LPAREN LEQ LCURLY LBRACK GTR GEQ EQL EOF DOT DIV COMMA COLON ASSIGN ARROW AND_KW ADD ]
+##
+## The known suffix of the stack is as follows:
+## postfix_expr LBRACK expr
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 27, spurious reduction of production expr -> postfix_expr
+##
+
+expected ']' after index expression
+
+prog: LBRACK FALSE_KW RPAREN
+##
+## Ends in an error in state: 79.
+##
+## expr -> expr . ADD expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . SUB expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . MUL expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . DIV expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . REM expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . ASSIGN expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . LSS expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . GTR expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . EQL expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . NEQ expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . LEQ expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . GEQ expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . AND_KW expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . OR_KW expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . PIPE expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## list_elems -> expr . [ RBRACK ]
+## list_elems -> expr . COMMA DOTDOT expr [ RBRACK ]
+## list_elems -> expr . COMMA list_elems [ RBRACK ]
+##
+## The known suffix of the stack is as follows:
+## expr
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 27, spurious reduction of production expr -> postfix_expr
+##
+
+expected ',' or ']' after list element
+
+prog: PERCENT_LCURLY FALSE_KW COLON FALSE_KW COMMA WHEN_KW
+##
+## Ends in an error in state: 146.
+##
+## separated_nonempty_list(COMMA,map_entry) -> map_entry COMMA . separated_nonempty_list(COMMA,map_entry) [ RCURLY ]
+##
+## The known suffix of the stack is as follows:
+## map_entry COMMA
+##
+
+expected map entry after ',' in map
+
+prog: PERCENT_LCURLY FALSE_KW SEMICOLON
+##
+## Ends in an error in state: 148.
+##
+## expr -> expr . ADD expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COLON ASSIGN AND_KW ADD ]
+## expr -> expr . SUB expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COLON ASSIGN AND_KW ADD ]
+## expr -> expr . MUL expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COLON ASSIGN AND_KW ADD ]
+## expr -> expr . DIV expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COLON ASSIGN AND_KW ADD ]
+## expr -> expr . REM expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COLON ASSIGN AND_KW ADD ]
+## expr -> expr . ASSIGN expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COLON ASSIGN AND_KW ADD ]
+## expr -> expr . LSS expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COLON ASSIGN AND_KW ADD ]
+## expr -> expr . GTR expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COLON ASSIGN AND_KW ADD ]
+## expr -> expr . EQL expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COLON ASSIGN AND_KW ADD ]
+## expr -> expr . NEQ expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COLON ASSIGN AND_KW ADD ]
+## expr -> expr . LEQ expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COLON ASSIGN AND_KW ADD ]
+## expr -> expr . GEQ expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COLON ASSIGN AND_KW ADD ]
+## expr -> expr . AND_KW expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COLON ASSIGN AND_KW ADD ]
+## expr -> expr . OR_KW expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COLON ASSIGN AND_KW ADD ]
+## expr -> expr . PIPE expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COLON ASSIGN AND_KW ADD ]
+## map_entry -> expr . COLON expr [ RCURLY COMMA ]
+##
+## The known suffix of the stack is as follows:
+## expr
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 27, spurious reduction of production expr -> postfix_expr
+##
+
+expected ':' after key in map entry
+
+prog: PERCENT_LCURLY FALSE_KW COLON WHEN_KW
+##
+## Ends in an error in state: 149.
+##
+## map_entry -> expr COLON . expr [ RCURLY COMMA ]
+##
+## The known suffix of the stack is as follows:
+## expr COLON
+##
+
+expected an expression after ':' in map entry
+
+prog: PERCENT_LCURLY FALSE_KW COLON FALSE_KW SEMICOLON
+##
+## Ends in an error in state: 150.
+##
+## expr -> expr . ADD expr [ SUB REM RCURLY PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . SUB expr [ SUB REM RCURLY PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . MUL expr [ SUB REM RCURLY PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . DIV expr [ SUB REM RCURLY PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . REM expr [ SUB REM RCURLY PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . ASSIGN expr [ SUB REM RCURLY PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . LSS expr [ SUB REM RCURLY PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . GTR expr [ SUB REM RCURLY PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . EQL expr [ SUB REM RCURLY PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . NEQ expr [ SUB REM RCURLY PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . LEQ expr [ SUB REM RCURLY PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . GEQ expr [ SUB REM RCURLY PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . AND_KW expr [ SUB REM RCURLY PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . OR_KW expr [ SUB REM RCURLY PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## expr -> expr . PIPE expr [ SUB REM RCURLY PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COMMA ASSIGN AND_KW ADD ]
+## map_entry -> expr COLON expr . [ RCURLY COMMA ]
+##
+## The known suffix of the stack is as follows:
+## expr COLON expr
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 27, spurious reduction of production expr -> postfix_expr
+##
+
+expected ',' or '}' after map entry
+
+prog: MATCH_KW FALSE_KW LCURLY PERCENT_LCURLY WHEN_KW
+##
+## Ends in an error in state: 97.
+##
+## map_pattern -> PERCENT_LCURLY . loption(separated_nonempty_list(COMMA,map_entry_pattern)) RCURLY [ WHEN_KW RCURLY RBRACK COMMA BAR ARROW ]
+##
+## The known suffix of the stack is as follows:
+## PERCENT_LCURLY
+##
+
+expected a map entry or '}' after '%{' in map pattern
+
+prog: MATCH_KW FALSE_KW LCURLY PERCENT_LCURLY FALSE_KW COLON FALSE_KW WHEN_KW
+##
+## Ends in an error in state: 99.
+##
+## separated_nonempty_list(COMMA,map_entry_pattern) -> map_entry_pattern . [ RCURLY ]
+## separated_nonempty_list(COMMA,map_entry_pattern) -> map_entry_pattern . COMMA separated_nonempty_list(COMMA,map_entry_pattern) [ RCURLY ]
+##
+## The known suffix of the stack is as follows:
+## map_entry_pattern
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 119, spurious reduction of production pattern -> or_pattern
+## In state 128, spurious reduction of production map_entry_pattern -> expr COLON pattern
+##
+
+expected ',' or '}' after map entry in map pattern
+
+prog: MATCH_KW FALSE_KW LCURLY PERCENT_LCURLY FALSE_KW COLON FALSE_KW COMMA WHEN_KW
+##
+## Ends in an error in state: 100.
+##
+## separated_nonempty_list(COMMA,map_entry_pattern) -> map_entry_pattern COMMA . separated_nonempty_list(COMMA,map_entry_pattern) [ RCURLY ]
+##
+## The known suffix of the stack is as follows:
+## map_entry_pattern COMMA
+##
+
+expected a map entry after ',' in map pattern
+
+prog: MATCH_KW FALSE_KW LCURLY PERCENT_LCURLY FALSE_KW SEMICOLON
+##
+## Ends in an error in state: 102.
+##
+## expr -> expr . ADD expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COLON ASSIGN AND_KW ADD ]
+## expr -> expr . SUB expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COLON ASSIGN AND_KW ADD ]
+## expr -> expr . MUL expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COLON ASSIGN AND_KW ADD ]
+## expr -> expr . DIV expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COLON ASSIGN AND_KW ADD ]
+## expr -> expr . REM expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COLON ASSIGN AND_KW ADD ]
+## expr -> expr . ASSIGN expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COLON ASSIGN AND_KW ADD ]
+## expr -> expr . LSS expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COLON ASSIGN AND_KW ADD ]
+## expr -> expr . GTR expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COLON ASSIGN AND_KW ADD ]
+## expr -> expr . EQL expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COLON ASSIGN AND_KW ADD ]
+## expr -> expr . NEQ expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COLON ASSIGN AND_KW ADD ]
+## expr -> expr . LEQ expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COLON ASSIGN AND_KW ADD ]
+## expr -> expr . GEQ expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COLON ASSIGN AND_KW ADD ]
+## expr -> expr . AND_KW expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COLON ASSIGN AND_KW ADD ]
+## expr -> expr . OR_KW expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COLON ASSIGN AND_KW ADD ]
+## expr -> expr . PIPE expr [ SUB REM PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV COLON ASSIGN AND_KW ADD ]
+## map_entry_pattern -> expr . COLON pattern [ RCURLY COMMA ]
+##
+## The known suffix of the stack is as follows:
+## expr
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 27, spurious reduction of production expr -> postfix_expr
+##
+
+expected ':' after key in map entry pattern
+
+prog: MATCH_KW FALSE_KW LCURLY PERCENT_LCURLY FALSE_KW COLON WHEN_KW
+##
+## Ends in an error in state: 103.
+##
+## map_entry_pattern -> expr COLON . pattern [ RCURLY COMMA ]
+##
+## The known suffix of the stack is as follows:
+## expr COLON
+##
+
+expected a pattern after ':' in map entry pattern
+
+prog: MATCH_KW FALSE_KW LCURLY LBRACK WHEN_KW
+##
+## Ends in an error in state: 105.
+##
+## list_pattern -> LBRACK . RBRACK [ WHEN_KW RCURLY RBRACK COMMA BAR ARROW ]
+## list_pattern -> LBRACK . rest_pattern RBRACK [ WHEN_KW RCURLY RBRACK COMMA BAR ARROW ]
+## list_pattern -> LBRACK . list_elem_patterns RBRACK [ WHEN_KW RCURLY RBRACK COMMA BAR ARROW ]
+##
+## The known suffix of the stack is as follows:
+## LBRACK
+##
+
+expected a pattern, '..', or ']' after '[' in list pattern
+
+prog: MATCH_KW FALSE_KW LCURLY LBRACK FALSE_KW WHEN_KW
+##
+## Ends in an error in state: 116.
+##
+## list_elem_patterns -> pattern . [ RBRACK ]
+## list_elem_patterns -> pattern . COMMA rest_pattern [ RBRACK ]
+## list_elem_patterns -> pattern . COMMA list_elem_patterns [ RBRACK ]
+##
+## The known suffix of the stack is as follows:
+## pattern
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 119, spurious reduction of production pattern -> or_pattern
+##
+
+expected ',' or ']' after pattern in list pattern
+
+prog: MATCH_KW FALSE_KW LCURLY LBRACK FALSE_KW COMMA WHEN_KW
+##
+## Ends in an error in state: 117.
+##
+## list_elem_patterns -> pattern COMMA . rest_pattern [ RBRACK ]
+## list_elem_patterns -> pattern COMMA . list_elem_patterns [ RBRACK ]
+##
+## The known suffix of the stack is as follows:
+## pattern COMMA
+##
+
+expected a pattern or '..' after ',' in list pattern
+
+prog: MATCH_KW FALSE_KW LCURLY FALSE_KW RCURLY
+##
+## Ends in an error in state: 131.
+##
+## match_arm -> pattern . option(guard) ARROW expr [ RCURLY COMMA ]
+##
+## The known suffix of the stack is as follows:
+## pattern
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 119, spurious reduction of production pattern -> or_pattern
+##
+
+expected '->' or 'when' after pattern in match arm
+
+prog: MATCH_KW FALSE_KW LCURLY LBRACK DOTDOT WHEN_KW
+##
+## Ends in an error in state: 110.
+##
+## rest_pattern -> DOTDOT . option(IDENT) [ RBRACK ]
+##
+## The known suffix of the stack is as follows:
+## DOTDOT
+##
+
+expected an identifier or ']' after '..' in list pattern
+
+prog: MATCH_KW FALSE_KW LCURLY LBRACK DOTDOT IDENT WHEN_KW
+##
+## Ends in an error in state: 113.
+##
+## list_pattern -> LBRACK rest_pattern . RBRACK [ WHEN_KW RCURLY RBRACK COMMA BAR ARROW ]
+##
+## The known suffix of the stack is as follows:
+## LBRACK rest_pattern
+##
+
+expected ']' after rest pattern in list pattern
+
+prog: MATCH_KW FALSE_KW LCURLY LBRACK FALSE_KW COMMA DOTDOT IDENT WHEN_KW
+##
+## Ends in an error in state: 126.
+##
+## list_pattern -> LBRACK list_elem_patterns . RBRACK [ WHEN_KW RCURLY RBRACK COMMA BAR ARROW ]
+##
+## The known suffix of the stack is as follows:
+## LBRACK list_elem_patterns
+##
+
+expected ']' after list elements in list pattern
+
+prog: FALSE_KW DOT WHEN_KW
+##
+## Ends in an error in state: 73.
+##
+## postfix_expr -> postfix_expr DOT . IDENT [ SUB SEMICOLON RPAREN REM RCURLY RBRACK PIPE OR_KW NEQ MUL LSS LPAREN LEQ LCURLY LBRACK GTR GEQ EQL EOF DOT DIV COMMA COLON ASSIGN ARROW AND_KW ADD ]
+##
+## The known suffix of the stack is as follows:
+## postfix_expr DOT
+##
+
+expected an identifier after '.'
+
+prog: LBRACK DOTDOT WHEN_KW
+##
+## Ends in an error in state: 25.
+##
+## list_expr -> LBRACK DOTDOT . expr RBRACK [ SUB SEMICOLON RPAREN REM RCURLY RBRACK PIPE OR_KW NEQ MUL LSS LPAREN LEQ LCURLY LBRACK GTR GEQ EQL EOF DOT DIV COMMA COLON ASSIGN ARROW AND_KW ADD ]
+##
+## The known suffix of the stack is as follows:
+## LBRACK DOTDOT
+##
+
+expected an expression after '..' in list
+
+prog: LBRACK DOTDOT FALSE_KW SEMICOLON
+##
+## Ends in an error in state: 75.
+##
+## expr -> expr . ADD expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . SUB expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . MUL expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . DIV expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . REM expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . ASSIGN expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . LSS expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . GTR expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . EQL expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . NEQ expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . LEQ expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . GEQ expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . AND_KW expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . OR_KW expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . PIPE expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## list_expr -> LBRACK DOTDOT expr . RBRACK [ SUB SEMICOLON RPAREN REM RCURLY RBRACK PIPE OR_KW NEQ MUL LSS LPAREN LEQ LCURLY LBRACK GTR GEQ EQL EOF DOT DIV COMMA COLON ASSIGN ARROW AND_KW ADD ]
+##
+## The known suffix of the stack is as follows:
+## LBRACK DOTDOT expr
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 27, spurious reduction of production expr -> postfix_expr
+##
+
+expected ']' after rest expression in list
+
+prog: LBRACK FALSE_KW COMMA WHEN_KW
+##
+## Ends in an error in state: 80.
+##
+## list_elems -> expr COMMA . DOTDOT expr [ RBRACK ]
+## list_elems -> expr COMMA . list_elems [ RBRACK ]
+##
+## The known suffix of the stack is as follows:
+## expr COMMA
+##
+
+expected a list element or '..' after ',' in list
+
+prog: LBRACK FALSE_KW COMMA DOTDOT WHEN_KW
+##
+## Ends in an error in state: 81.
+##
+## list_elems -> expr COMMA DOTDOT . expr [ RBRACK ]
+##
+## The known suffix of the stack is as follows:
+## expr COMMA DOTDOT
+##
+
+expected an expression after '..' in list
+
+prog: LBRACK FALSE_KW COMMA DOTDOT FALSE_KW SEMICOLON
+##
+## Ends in an error in state: 82.
+##
+## expr -> expr . ADD expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . SUB expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . MUL expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . DIV expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . REM expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . ASSIGN expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . LSS expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . GTR expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . EQL expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . NEQ expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . LEQ expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . GEQ expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . AND_KW expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . OR_KW expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## expr -> expr . PIPE expr [ SUB REM RBRACK PIPE OR_KW NEQ MUL LSS LEQ GTR GEQ EQL DIV ASSIGN AND_KW ADD ]
+## list_elems -> expr COMMA DOTDOT expr . [ RBRACK ]
+##
+## The known suffix of the stack is as follows:
+## expr COMMA DOTDOT expr
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 27, spurious reduction of production expr -> postfix_expr
+##
+
+expected ']' after rest expression in list

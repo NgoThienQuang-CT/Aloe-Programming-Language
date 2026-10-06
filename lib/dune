@@ -1,0 +1,17 @@
+(library
+ (name aloe)
+ (libraries menhirLib))
+
+(ocamllex lexer)
+
+(menhir
+ (modules parser)
+ (flags --table))
+
+(rule
+ (target parser_messages.ml)
+ (deps parser.messages parser.mly)
+ (action
+  (with-stdout-to
+   %{target}
+   (run menhir --compile-errors %{deps}))))

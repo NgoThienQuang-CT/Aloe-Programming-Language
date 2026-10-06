@@ -1,0 +1,4 @@
+(executable
+ (public_name aloe)
+ (name main)
+ (libraries aloe lambda-term lwt base))
