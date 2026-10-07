@@ -13,8 +13,7 @@ let pad n = String.make (max 0 n) ' '
 let get_line lines n =
   match List.nth_opt lines (n - 1) with
   | Some s ->
-      if not (String.ends_with ~suffix:"\r" s) then s
-      else String.sub s 0 (String.length s - 1)
+      if not (String.ends_with ~suffix:"\r" s) then s else String.sub s 0 (String.length s - 1)
   | None -> ""
 
 let error_info (span : Lexing.position * Lexing.position) =
@@ -58,27 +57,23 @@ let report source (span : Lexing.position * Lexing.position) message =
     let upper_arrow = String.make (max 0 (beg_col - 1)) '_' in
     (* ERR6, ERR7 *)
     write
-      (Printf.sprintf "%*d%s | %s  %s" line_number_size beg_line blu clr
-         (get_line lines beg_line) );
+      (Printf.sprintf "%*d%s | %s  %s" line_number_size beg_line blu clr (get_line lines beg_line));
     write (Printf.sprintf "%s%s | %s%s _%s^%s" margin blu clr red upper_arrow clr);
 
     if number_of_lines <= max_source_lines then
       for l = beg_line + 1 to end_line - 1 do
         (* ERR8 *)
         write
-          (Printf.sprintf "%*d%s | %s%s|%s %s" line_number_size l blu clr red clr
-             (get_line lines l) )
+          (Printf.sprintf "%*d%s | %s%s|%s %s" line_number_size l blu clr red clr (get_line lines l))
       done
     else begin
       (* ERR8, ERR9, ERR8 *)
       write
-        (Printf.sprintf "%*d%s | %s%s|%s %s" line_number_size (beg_line + 1) blu clr red
-           clr
+        (Printf.sprintf "%*d%s | %s%s|%s %s" line_number_size (beg_line + 1) blu clr red clr
            (get_line lines (beg_line + 1)) );
       write (Printf.sprintf "%*s%s | %s%s|%s" line_number_size "..." blu clr red clr);
       write
-        (Printf.sprintf "%*d%s | %s%s|%s %s" line_number_size (end_line - 1) blu clr red
-           clr
+        (Printf.sprintf "%*d%s | %s%s|%s %s" line_number_size (end_line - 1) blu clr red clr
            (get_line lines (end_line - 1)) )
     end;
 
@@ -94,8 +89,7 @@ let report source (span : Lexing.position * Lexing.position) message =
   write (Printf.sprintf "%s%s | %s" margin blu clr);
 
   let res = Buffer.contents out in
-  if String.ends_with ~suffix:"\n" res then String.sub res 0 (String.length res - 1)
-  else res
+  if String.ends_with ~suffix:"\n" res then String.sub res 0 (String.length res - 1) else res
 
 let rec loop source lexbuf = function
   | I.InputNeeded _ as checkpoint ->
@@ -117,8 +111,7 @@ let rec loop source lexbuf = function
           loop source lexbuf nxt_checkpoint
       | Error err -> Error err
       end
-  | (I.Shifting _ | I.AboutToReduce _) as checkpoint ->
-      loop source lexbuf (I.resume checkpoint)
+  | (I.Shifting _ | I.AboutToReduce _) as checkpoint -> loop source lexbuf (I.resume checkpoint)
   | I.HandlingError env ->
       let span =
         try I.positions env with

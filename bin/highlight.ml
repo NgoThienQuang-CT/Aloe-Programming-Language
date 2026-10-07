@@ -1,12 +1,8 @@
 open Base
 open Aloe
 
-let kw_style =
-  { LTerm_style.none with foreground = Some LTerm_style.lmagenta; bold = Some true }
-
-let bool_style =
-  { LTerm_style.none with foreground = Some LTerm_style.yellow; bold = Some true }
-
+let kw_style = { LTerm_style.none with foreground = Some LTerm_style.lmagenta; bold = Some true }
+let bool_style = { LTerm_style.none with foreground = Some LTerm_style.yellow; bold = Some true }
 let num_style = { LTerm_style.none with foreground = Some LTerm_style.lyellow }
 let str_style = { LTerm_style.none with foreground = Some LTerm_style.green }
 let var_style = { LTerm_style.none with foreground = Some LTerm_style.lcyan }

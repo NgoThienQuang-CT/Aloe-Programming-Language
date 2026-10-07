@@ -11,8 +11,7 @@ let rec match_pattern pattern subject =
   | Ast.PatWildcard, _ -> Some []
   | Ast.PatVar var, _ -> Some [ (var, subject) ]
   | Ast.PatLit lit, _ -> match_literal_pattern lit subject
-  | Ast.PatList patterns, Value.List list_subject ->
-      match_list_pattern patterns list_subject
+  | Ast.PatList patterns, Value.List list_subject -> match_list_pattern patterns list_subject
   | Ast.PatListRest (prev_patterns, rest), Value.List list_subject ->
       match_list_rest_pattern prev_patterns rest list_subject
   | Ast.PatMap patterns, Value.TreeMap map -> match_map_pattern patterns map

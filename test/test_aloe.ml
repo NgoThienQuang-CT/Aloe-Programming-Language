@@ -22,10 +22,7 @@ let arithmetic_tests =
     { name = "division"; source = "10 / 2"; expected = "5" };
     { name = "fractional division"; source = "5 / 2"; expected = "2.5" };
     { name = "modulo"; source = "10 % 3"; expected = "1" };
-    { name = "operator precedence mult before add";
-      source = "2 + 3 * 4";
-      expected = "14"
-    };
+    { name = "operator precedence mult before add"; source = "2 + 3 * 4"; expected = "14" };
     { name = "operator precedence with parens"; source = "(2 + 3) * 4"; expected = "20" };
     { name = "left associative subtraction"; source = "10 - 4 - 2"; expected = "4" };
     { name = "left associative division"; source = "100 / 10 / 2"; expected = "5" }
@@ -94,51 +91,30 @@ let string_tests =
     };
     { name = "string indexing first char"; source = "\"hello\"[0]"; expected = "\"h\"" };
     { name = "string indexing middle char"; source = "\"hello\"[2]"; expected = "\"l\"" };
-    { name = "string indexing last char negative";
-      source = "\"hello\"[-1]";
-      expected = "\"o\""
-    };
+    { name = "string indexing last char negative"; source = "\"hello\"[-1]"; expected = "\"o\"" };
     { name = "string indexing out of bounds"; source = "\"hello\"[10]"; expected = "nil" };
-    { name = "string indexing negative out of bounds";
-      source = "\"hello\"[-10]";
-      expected = "nil"
-    }
+    { name = "string indexing negative out of bounds"; source = "\"hello\"[-10]"; expected = "nil" }
   ]
 
 let variable_tests =
   [ { name = "variable assignment and lookup"; source = "x = 42; x"; expected = "42" };
     { name = "reassignment"; source = "x = 1; x = 2; x"; expected = "2" };
     { name = "multiple variables"; source = "a = 10; b = 20; a + b"; expected = "30" };
-    { name = "dependent variables";
-      source = "a = 5; b = a * 2; c = a + b * 2; c";
-      expected = "25"
-    }
+    { name = "dependent variables"; source = "a = 5; b = a * 2; c = a + b * 2; c"; expected = "25" }
   ]
 
 let block_tests =
   [ { name = "single expr block"; source = "{ 10 }"; expected = "10" };
     { name = "multi-expr block"; source = "{ a = 5; b = 10; a + b }"; expected = "15" };
     { name = "block scope isolation"; source = "x = 1; { x = 2 }; x"; expected = "1" };
-    { name = "nested block access outer";
-      source = "x = 5; { y = 10; x + y }";
-      expected = "15"
-    };
-    { name = "trailing semicolon block yields nil";
-      source = "{ x = 10; }";
-      expected = "nil"
-    }
+    { name = "nested block access outer"; source = "x = 5; { y = 10; x + y }"; expected = "15" };
+    { name = "trailing semicolon block yields nil"; source = "{ x = 10; }"; expected = "nil" }
   ]
 
 let function_tests =
   [ { name = "nullary function"; source = "f = fn() { 42 }; f()"; expected = "42" };
-    { name = "unary function";
-      source = "inc = fn(x) { x + 1 }; inc(10)";
-      expected = "11"
-    };
-    { name = "binary function";
-      source = "add = fn(a, b) { a + b }; add(3, 4)";
-      expected = "7"
-    };
+    { name = "unary function"; source = "inc = fn(x) { x + 1 }; inc(10)"; expected = "11" };
+    { name = "binary function"; source = "add = fn(a, b) { a + b }; add(3, 4)"; expected = "7" };
     { name = "closure capturing outer variable";
       source = "make_adder = fn(n) { fn(x) { x + n } }; add10 = make_adder(10); add10(5)";
       expected = "15"
@@ -147,10 +123,7 @@ let function_tests =
       source = "fact = fn(n) { match n { 0 -> 1, _ -> n * fact(n - 1) } }; fact(5)";
       expected = "120"
     };
-    { name = "pipe operator to function";
-      source = "5 |> fn(x) { x * 2 }";
-      expected = "10"
-    };
+    { name = "pipe operator to function"; source = "5 |> fn(x) { x * 2 }"; expected = "10" };
     { name = "pipe operator to builtin"; source = "\"hello\" |> len"; expected = "5" };
     { name = "pipe operator chained";
       source = "2 |> fn(x) { x + 2 } |> fn(x) { x * 4 }";
@@ -170,44 +143,23 @@ let list_tests =
     { name = "list index 2"; source = "[10, 20, 30][2]"; expected = "30" };
     { name = "list index negative -1"; source = "[10, 20, 30][-1]"; expected = "30" };
     { name = "list index negative -3"; source = "[10, 20, 30][-3]"; expected = "10" };
-    { name = "list index out of bounds positive";
-      source = "[1, 2, 3][10]";
-      expected = "nil"
-    };
-    { name = "list index out of bounds negative";
-      source = "[1, 2, 3][-10]";
-      expected = "nil"
-    };
+    { name = "list index out of bounds positive"; source = "[1, 2, 3][10]"; expected = "nil" };
+    { name = "list index out of bounds negative"; source = "[1, 2, 3][-10]"; expected = "nil" };
     { name = "nested list index"; source = "[[10, 20], [30, 40]][0][1]"; expected = "20" };
-    { name = "list cons single element";
-      source = "[1, ..[2, 3]]";
-      expected = "[1, 2, 3]"
-    };
-    { name = "list cons multiple elements";
-      source = "[1, 2, ..[3, 4]]";
-      expected = "[1, 2, 3, 4]"
-    };
+    { name = "list cons single element"; source = "[1, ..[2, 3]]"; expected = "[1, 2, 3]" };
+    { name = "list cons multiple elements"; source = "[1, 2, ..[3, 4]]"; expected = "[1, 2, 3, 4]" };
     { name = "list spread only"; source = "[..[1, 2]]"; expected = "[1, 2]" };
     { name = "list spread empty"; source = "[1, ..[]]"; expected = "[1]" };
-    { name = "list cons with variable";
-      source = "t = [2, 3]; [1, ..t]";
-      expected = "[1, 2, 3]"
-    }
+    { name = "list cons with variable"; source = "t = [2, 3]; [1, ..t]"; expected = "[1, 2, 3]" }
   ]
 
 let map_tests =
   [ { name = "empty map"; source = "%{}"; expected = "%{}" };
     { name = "map with string key"; source = "%{\"a\": 1}[\"a\"]"; expected = "1" };
     { name = "map with number key"; source = "%{1: \"one\"}[1]"; expected = "\"one\"" };
-    { name = "map with boolean key";
-      source = "%{true: \"yes\"}[true]";
-      expected = "\"yes\""
-    };
+    { name = "map with boolean key"; source = "%{true: \"yes\"}[true]"; expected = "\"yes\"" };
     { name = "map missing key"; source = "%{\"a\": 1}[\"b\"]"; expected = "nil" };
-    { name = "map overwrite key";
-      source = "%{\"a\": 1, \"a\": 2}[\"a\"]";
-      expected = "2"
-    };
+    { name = "map overwrite key"; source = "%{\"a\": 1, \"a\": 2}[\"a\"]"; expected = "2" };
     { name = "map dot syntax"; source = "%{\"a\": 1}.a"; expected = "1" };
     { name = "map dot syntax missing key"; source = "%{\"a\": 1}.b"; expected = "nil" };
     { name = "map dot syntax nested";
@@ -230,9 +182,7 @@ let pattern_matching_tests =
       expected = "\"other\""
     };
     { name = "match string literal";
-      source =
-        "match \"dog\" { \"cat\" -> \"meow\", \"dog\" -> \"dog sound\", _ -> \"unknown\" \
-         }";
+      source = "match \"dog\" { \"cat\" -> \"meow\", \"dog\" -> \"dog sound\", _ -> \"unknown\" }";
       expected = "\"dog sound\""
     };
     { name = "match boolean literal";
@@ -243,10 +193,7 @@ let pattern_matching_tests =
       source = "match nil { nil -> \"is nil\", _ -> \"not nil\" }";
       expected = "\"is nil\""
     };
-    { name = "match variable binding";
-      source = "match 10 { x -> x * 2 }";
-      expected = "20"
-    };
+    { name = "match variable binding"; source = "match 10 { x -> x * 2 }"; expected = "20" };
     { name = "match or-pattern";
       source = "match 2 { 1 | 2 | 3 -> \"match\", _ -> \"no match\" }";
       expected = "\"match\""
@@ -284,25 +231,19 @@ let pattern_matching_tests =
       expected = "10"
     };
     { name = "match map pattern single key";
-      source =
-        "match %{\"name\": \"Alice\", \"age\": 30} { %{\"name\": n} -> n, _ -> \"anon\" }";
+      source = "match %{\"name\": \"Alice\", \"age\": 30} { %{\"name\": n} -> n, _ -> \"anon\" }";
       expected = "\"Alice\""
     };
     { name = "match map pattern multiple keys";
-      source =
-        "match %{\"x\": 10, \"y\": 20, \"z\": 30} { %{\"x\": a, \"y\": b} -> a + b, _ -> \
-         0 }";
+      source = "match %{\"x\": 10, \"y\": 20, \"z\": 30} { %{\"x\": a, \"y\": b} -> a + b, _ -> 0 }";
       expected = "30"
     };
     { name = "match map pattern missing key falls through";
-      source =
-        "match %{\"name\": \"Alice\"} { %{\"missing\": m} -> \"found\", _ -> \"not \
-         found\" }";
+      source = "match %{\"name\": \"Alice\"} { %{\"missing\": m} -> \"found\", _ -> \"not found\" }";
       expected = "\"not found\""
     };
     { name = "match nested map and list pattern";
-      source =
-        "match %{\"items\": [10, 20]} { %{\"items\": [first, ..]} -> first, _ -> 0 }";
+      source = "match %{\"items\": [10, 20]} { %{\"items\": [first, ..]} -> first, _ -> 0 }";
       expected = "10"
     }
   ]
@@ -325,35 +266,23 @@ let builtin_tests =
     { name = "to_string integer"; source = "to_string(42)"; expected = "\"42\"" };
     { name = "to_string float"; source = "to_string(3.14)"; expected = "\"3.14\"" };
     { name = "to_string boolean true"; source = "to_string(true)"; expected = "\"true\"" };
-    { name = "to_string boolean false";
-      source = "to_string(false)";
-      expected = "\"false\""
-    };
+    { name = "to_string boolean false"; source = "to_string(false)"; expected = "\"false\"" };
     { name = "to_string nil"; source = "to_string(nil)"; expected = "\"nil\"" };
     { name = "to_string string"; source = "to_string(\"hello\")"; expected = "\"hello\"" };
-    { name = "to_list string";
-      source = "to_list(\"abc\")";
-      expected = "[\"a\", \"b\", \"c\"]"
-    };
+    { name = "to_list string"; source = "to_list(\"abc\")"; expected = "[\"a\", \"b\", \"c\"]" };
     { name = "to_list empty string"; source = "to_list(\"\")"; expected = "[]" };
     { name = "to_list list"; source = "to_list([1, 2, 3])"; expected = "[1, 2, 3]" };
     { name = "to_list map"; source = "to_list(%{\"a\": 1})"; expected = "[[\"a\", 1]]" };
     { name = "to_list empty map"; source = "to_list(%{})"; expected = "[]" };
     { name = "cons element to list"; source = "cons(1, [2, 3])"; expected = "[1, 2, 3]" };
-    { name = "cons element to empty list";
-      source = "cons(\"a\", [])";
-      expected = "[\"a\"]"
-    };
+    { name = "cons element to empty list"; source = "cons(\"a\", [])"; expected = "[\"a\"]" };
     { name = "cons with pipe"; source = "1 |> cons([2, 3])"; expected = "[1, 2, 3]" };
     { name = "put new key"; source = "put(%{}, \"a\", 1)"; expected = "%{\"a\": 1}" };
     { name = "put multiple keys";
       source = "put(%{\"a\": 1}, \"b\", 2)";
       expected = "%{\"a\": 1, \"b\": 2}"
     };
-    { name = "put overwrite key";
-      source = "put(%{\"a\": 1}, \"a\", 2)";
-      expected = "%{\"a\": 2}"
-    };
+    { name = "put overwrite key"; source = "put(%{\"a\": 1}, \"a\", 2)"; expected = "%{\"a\": 2}" };
     { name = "put chained with pipe";
       source = "%{} |> put(\"x\", 10) |> put(\"y\", 20)";
       expected = "%{\"x\": 10, \"y\": 20}"
@@ -372,33 +301,46 @@ let builtin_tests =
       expected = "%{\"b\": 2}"
     };
     { name = "slice middle"; source = "slice(\"hello\", 1, 3)"; expected = "\"ell\"" };
-    { name = "slice full string";
-      source = "slice(\"hello\", 0, 5)";
-      expected = "\"hello\""
+    { name = "slice full string"; source = "slice(\"hello\", 0, 5)"; expected = "\"hello\"" };
+    { name = "slice negative index"; source = "slice(\"hello\", -2, 2)"; expected = "\"lo\"" };
+    { name = "slice out of bounds len"; source = "slice(\"hello\", 0, 10)"; expected = "nil" };
+    { name = "slice out of bounds pos"; source = "slice(\"hello\", 10, 2)"; expected = "nil" };
+    { name = "slice with pipe"; source = "\"hello world\" |> slice(6, 5)"; expected = "\"world\"" };
+    { name = "split basic"; source = "split(\"a=b\", \"=\")"; expected = "[\"a\", \"b\"]" };
+    { name = "split first occurrence";
+      source = "split(\"a,b,c\", \",\")";
+      expected = "[\"a\", \"b,c\"]"
     };
-    { name = "slice negative index";
-      source = "slice(\"hello\", -2, 2)";
-      expected = "\"lo\""
+    { name = "split not found"; source = "split(\"hello\", \",\")"; expected = "nil" };
+    { name = "split empty sep"; source = "split(\"hello\", \"\")"; expected = "[\"\", \"hello\"]" };
+    { name = "split with pipe";
+      source = "\"user:admin\" |> split(\":\")";
+      expected = "[\"user\", \"admin\"]"
     };
-    { name = "slice out of bounds len";
-      source = "slice(\"hello\", 0, 10)";
-      expected = "nil"
+    { name = "join with sep";
+      source = "join([\"a\", \"b\", \"c\"], \", \")";
+      expected = "\"a, b, c\""
     };
-    { name = "slice out of bounds pos";
-      source = "slice(\"hello\", 10, 2)";
-      expected = "nil"
+    { name = "join default empty sep";
+      source = "join([\"a\", \"b\", \"c\"])";
+      expected = "\"abc\""
     };
-    { name = "slice with pipe";
-      source = "\"hello world\" |> slice(6, 5)";
-      expected = "\"world\""
-    }
+    { name = "join empty list"; source = "join([])"; expected = "\"\"" };
+    { name = "join empty list with sep"; source = "join([], \"-\")"; expected = "\"\"" };
+    { name = "join single element"; source = "join([\"one\"])"; expected = "\"one\"" };
+    { name = "join with pipe"; source = "[\"x\", \"y\"] |> join(\"-\")"; expected = "\"x-y\"" };
+    { name = "find basic"; source = "find(\"hello\", \"ll\")"; expected = "2" };
+    { name = "find not found"; source = "find(\"hello\", \"world\")"; expected = "nil" };
+    { name = "find first occurrence"; source = "find(\"banana\", \"an\")"; expected = "1" };
+    { name = "find with start offset"; source = "find(\"banana\", \"an\", 2)"; expected = "3" };
+    { name = "find out of bounds start"; source = "find(\"banana\", \"an\", 10)"; expected = "nil" };
+    { name = "find negative start"; source = "find(\"banana\", \"an\", -1)"; expected = "nil" };
+    { name = "find empty sub"; source = "find(\"abc\", \"\")"; expected = "0" };
+    { name = "find with pipe"; source = "\"hello world\" |> find(\"world\")"; expected = "6" }
   ]
 
 let runtime_error_tests =
-  [ { name = "division by zero";
-      source = "1 / 0";
-      expected = "ArithmeticError: division by zero"
-    };
+  [ { name = "division by zero"; source = "1 / 0"; expected = "ArithmeticError: division by zero" };
     { name = "unbound variable error";
       source = "not_defined";
       expected = "NameError: variable not_defined is not defined"
@@ -490,13 +432,57 @@ let runtime_error_tests =
     { name = "list spread non-list string error";
       source = "[..\"abc\"]";
       expected = "TypeError: spread expects a list, but got 'string'"
+    };
+    { name = "builtin split arg 1 type mismatch";
+      source = "split(123, \",\")";
+      expected = "TypeError: split expects a string as first argument, but got 'number'"
+    };
+    { name = "builtin split arg 2 type mismatch";
+      source = "split(\"hello\", 123)";
+      expected = "TypeError: split expects a string as second argument, but got 'number'"
+    };
+    { name = "builtin split arity mismatch";
+      source = "split(\"hello\")";
+      expected = "TypeError: split expected 2 arguments, but got 1"
+    };
+    { name = "builtin join arg 1 type mismatch";
+      source = "join(\"not_a_list\")";
+      expected = "TypeError: join expects a list as first argument, but got 'string'"
+    };
+    { name = "builtin join arg 2 type mismatch";
+      source = "join([], 123)";
+      expected = "TypeError: join expects a string as second argument, but got 'number'"
+    };
+    { name = "builtin join element type mismatch";
+      source = "join([\"a\", 123], \",\")";
+      expected = "TypeError: join expects a list of strings, but got element of type 'number'"
+    };
+    { name = "builtin join arity mismatch";
+      source = "join([], \",\", \",\")";
+      expected = "TypeError: join expected 2 arguments, but got 3"
+    };
+    { name = "builtin find arg 1 type mismatch";
+      source = "find(123, \"a\")";
+      expected = "TypeError: find expects a string as first argument, but got 'number'"
+    };
+    { name = "builtin find arg 2 type mismatch";
+      source = "find(\"abc\", 123)";
+      expected = "TypeError: find expects a string as second argument, but got 'number'"
+    };
+    { name = "builtin find arg 3 type mismatch";
+      source = "find(\"abc\", \"b\", \"0\")";
+      expected = "TypeError: find expects a number as third argument, but got 'string'"
+    };
+    { name = "builtin find arity mismatch";
+      source = "find(\"abc\")";
+      expected = "TypeError: find expected 3 arguments, but got 1"
     }
   ]
 
 let all_tests =
   List.map to_ounit_test
-    ( arithmetic_tests @ unary_tests @ boolean_logic_tests @ comparison_tests
-    @ string_tests @ variable_tests @ block_tests @ function_tests @ list_tests
-    @ map_tests @ pattern_matching_tests @ builtin_tests @ runtime_error_tests )
+    ( arithmetic_tests @ unary_tests @ boolean_logic_tests @ comparison_tests @ string_tests
+    @ variable_tests @ block_tests @ function_tests @ list_tests @ map_tests
+    @ pattern_matching_tests @ builtin_tests @ runtime_error_tests )
 
 let () = run_test_tt_main ("aloe_suite" >::: all_tests)

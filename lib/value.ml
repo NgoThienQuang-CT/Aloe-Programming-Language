@@ -45,14 +45,12 @@ module MapOps = struct
     | Node { l; r; _ } -> height l - height r
 
   let rotate_r = function
-    | Node { k = ka; v = va; l = Node { k = kb; v = vb; l = lb; r = rb; _ }; r = ra; _ }
-      ->
+    | Node { k = ka; v = va; l = Node { k = kb; v = vb; l = lb; r = rb; _ }; r = ra; _ } ->
         make kb vb lb (make ka va rb ra)
     | tree -> tree
 
   let rotate_l = function
-    | Node { k = ka; v = va; l = la; r = Node { k = kb; v = vb; l = lb; r = rb; _ }; _ }
-      ->
+    | Node { k = ka; v = va; l = la; r = Node { k = kb; v = vb; l = lb; r = rb; _ }; _ } ->
         make kb vb (make ka va la lb) rb
     | tree -> tree
 
@@ -60,13 +58,11 @@ module MapOps = struct
     let bf = balance_factor tree in
     if bf > 1 then
       match tree with
-      | Node ({ l; _ } as n) when balance_factor l < 0 ->
-          Node { n with l = rotate_l l } |> rotate_r
+      | Node ({ l; _ } as n) when balance_factor l < 0 -> Node { n with l = rotate_l l } |> rotate_r
       | _ -> rotate_r tree
     else if bf < -1 then
       match tree with
-      | Node ({ r; _ } as n) when balance_factor r > 0 ->
-          Node { n with r = rotate_r r } |> rotate_l
+      | Node ({ r; _ } as n) when balance_factor r > 0 -> Node { n with r = rotate_r r } |> rotate_l
       | _ -> rotate_l tree
     else tree
 
@@ -180,8 +176,7 @@ let rec string_of_value = function
   | Boolean b -> string_of_bool b
   | Closure _ -> "<function>"
   | Builtin b -> Printf.sprintf "<built-in> : %s" b.name
-  | List list ->
-      list |> List.map string_of_value |> String.concat ", " |> Printf.sprintf "[%s]"
+  | List list -> list |> List.map string_of_value |> String.concat ", " |> Printf.sprintf "[%s]"
   | TreeMap tree ->
       MapOps.fold
         (fun k v acc ->

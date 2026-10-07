@@ -30,8 +30,8 @@ let modify_env (f : 'a t -> 'a t) : ('a, unit) state = fun env -> ((), f env)
 
 let modify = modify_env
 
-(** [with_local_env env m] runs [m] inside [env], then discards [env] when [m] finishes to
-    preserve outer environment. *)
+(** [with_local_env env m] runs [m] inside [env], then discards [env] when [m] finishes to preserve
+    outer environment. *)
 let with_local_env (env : 'a t) (m : ('a, 'res) state) : ('a, 'res) state =
  fun outer_env ->
   let v, _ = m env in
@@ -40,8 +40,7 @@ let with_local_env (env : 'a t) (m : ('a, 'res) state) : ('a, 'res) state =
 let with_local = with_local_env
 
 (** [extend_env name value] adds a new binding of [name] and [value]. *)
-let extend_env name value : ('a, unit) state =
-  modify_env (fun env -> (name, value) :: env)
+let extend_env name value : ('a, unit) state = modify_env (fun env -> (name, value) :: env)
 
 let extend = extend_env
 

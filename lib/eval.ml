@@ -32,9 +32,7 @@ let rec eval expr =
           | Value.List vlist -> return (Value.List (velems @ vlist))
           | other ->
               let name = Value.name_of_value other in
-              let message =
-                Printf.sprintf "TypeError: spread expects a list, but got '%s'" name
-              in
+              let message = Printf.sprintf "TypeError: spread expects a list, but got '%s'" name in
               raise (RuntimeError message)
           end
       end
@@ -134,8 +132,8 @@ and eval_binop op lhs rhs =
         let vl_name = Value.name_of_value vl in
         let vr_name = Value.name_of_value vr in
         let message =
-          Printf.sprintf "TypeError: operator %s cannot apply to type %s and %s" op_str
-            vl_name vr_name
+          Printf.sprintf "TypeError: operator %s cannot apply to type %s and %s" op_str vl_name
+            vr_name
         in
         raise (RuntimeError message)
     end
@@ -168,8 +166,8 @@ and param_bind params values =
   | [], _ :: _ -> raise (RuntimeError "TypeError: too many arguments provided")
   (* Function has some parameters, and no arguments are provided. *)
   | p :: _, [] -> raise (RuntimeError ("TypeError: missing required argument: " ^ p))
-  (* Function has some parameters, and some arguments are provided. Bind this param and
-     rescurse the rest. *)
+  (* Function has some parameters, and some arguments are provided. Bind this param and rescurse the
+     rest. *)
   | p :: ps', v :: vs' -> (p, v) :: param_bind ps' vs'
 
 and eval_index target index =
@@ -194,9 +192,7 @@ and eval_list_index list = function
   | Value.Number _ -> raise (RuntimeError "TypeError: list index must be an integer")
   | other ->
       let vindex_name = Value.string_of_value other in
-      let message =
-        Printf.sprintf "TypeError: list index must be a number, get %s" vindex_name
-      in
+      let message = Printf.sprintf "TypeError: list index must be a number, get %s" vindex_name in
       raise (RuntimeError message)
 
 and eval_string_index str = function
@@ -210,9 +206,7 @@ and eval_string_index str = function
   | Value.Number _ -> raise (RuntimeError "TypeError: string index must be an integer")
   | other ->
       let vindex_name = Value.string_of_value other in
-      let message =
-        Printf.sprintf "TypeError: string index must be a number, get %s" vindex_name
-      in
+      let message = Printf.sprintf "TypeError: string index must be a number, get %s" vindex_name in
       raise (RuntimeError message)
 
 and eval_map_index map key =

@@ -9,7 +9,10 @@ let rec make_initial_env () =
     make "put" builtin_put;
     make "delete" builtin_delete;
     make "to_list" builtin_to_list;
-    make "slice" builtin_slice
+    make "slice" builtin_slice;
+    make "split" builtin_split;
+    make "join" builtin_join;
+    make "find" builtin_find
   ]
 
 let initial_env = make_initial_env ()

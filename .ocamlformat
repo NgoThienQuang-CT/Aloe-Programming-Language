@@ -1,6 +1,6 @@
 version = 0.29.0
 profile = default
-margin = 90
+margin = 100
 break-cases = all
 type-decl = sparse
 dock-collection-brackets = false

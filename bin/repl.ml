@@ -26,9 +26,7 @@ class aloe_read_line ~term ~history =
     method! private exec ?(keys = []) =
       function
       | Accept :: actions when React.S.value self#mode = LTerm_read_line.Edition ->
-          let txt =
-            self#edit |> Zed_edit.text |> Zed_rope.to_string |> Zed_string.to_utf8
-          in
+          let txt = self#edit |> Zed_edit.text |> Zed_rope.to_string |> Zed_string.to_utf8 in
           let ctx = Input.check txt Input.empty_ctx in
           if Input.is_done ctx then super_term#exec ~keys (Accept :: actions)
           else begin
@@ -43,17 +41,14 @@ class aloe_read_line ~term ~history =
       | History_prev when Zed_edit.line self#context > 0 ->
           LTerm_read_line.Edit (LTerm_edit.Zed Zed_edit.Prev_line) |> super#send_action
       (* 2. Down arrow: move to next line if not on the last line *)
-      | History_next
-        when Zed_edit.line self#context < Zed_lines.count (Zed_edit.lines self#edit) ->
+      | History_next when Zed_edit.line self#context < Zed_lines.count (Zed_edit.lines self#edit) ->
           LTerm_read_line.Edit (LTerm_edit.Zed Zed_edit.Next_line) |> super#send_action
       | _ -> super#send_action action
 
     initializer
       self#set_prompt (React.S.const prompt);
 
-      self#bind
-        [ { control = false; meta = true; shift = false; code = Enter } ]
-        [ Accept ];
+      self#bind [ { control = false; meta = true; shift = false; code = Enter } ] [ Accept ];
 
       self#bind
         [ { control = false; meta = false; shift = false; code = Tab } ]
