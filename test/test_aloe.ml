@@ -131,6 +131,72 @@ let function_tests =
     }
   ]
 
+let ref_tests =
+  [ { name = "integer ref literal"; source = "&42"; expected = "ref<42>" };
+    { name = "string ref literal"; source = "&\"hello\""; expected = "ref<\"hello\">" };
+    { name = "boolean ref literal"; source = "&true"; expected = "ref<true>" };
+    { name = "list ref literal"; source = "&[1, 2, 3]"; expected = "ref<[1, 2, 3]>" };
+    { name = "map ref literal"; source = "&%{\"a\": 1}"; expected = "ref<%{\"a\": 1}>" };
+    { name = "nested ref literal"; source = "&&10"; expected = "ref<ref<10>>" };
+    { name = "deref number"; source = "r = &42; @r"; expected = "42" };
+    { name = "deref string"; source = "r = &\"aloe\"; @r"; expected = "\"aloe\"" };
+    { name = "deref directly"; source = "@(&100)"; expected = "100" };
+    { name = "deref nested ref twice"; source = "r = &&5; @@r"; expected = "5" };
+    { name = "deref nested ref once"; source = "r = &&5; @r"; expected = "ref<5>" };
+    { name = "walrus basic mutation"; source = "r = &10; r := 20; @r"; expected = "20" };
+    { name = "walrus returns assigned value"; source = "r = &10; r := 20"; expected = "20" };
+    { name = "walrus aliasing"; source = "r1 = &1; r2 = r1; r2 := 99; @r1"; expected = "99" };
+    { name = "walrus in function";
+      source = "inc = fn(r) { r := @r + 1 }; c = &5; inc(c); @c";
+      expected = "6"
+    };
+    { name = "walrus stateful closure counter";
+      source = "make_c = fn() { c = &0; fn() { c := @c + 1; @c } }; c = make_c(); c(); c()";
+      expected = "2"
+    };
+    { name = "walrus list accumulation";
+      source = "log = &[]; log := cons(1, @log); log := cons(2, @log); @log";
+      expected = "[2, 1]"
+    };
+    { name = "type reference"; source = "type(&42)"; expected = "\"reference\"" }
+  ]
+
+let use_tests =
+  [ { name = "use basic with argument";
+      source = "with_val = fn(v, f) { f(v * 2) }; use x <- with_val(10); x + 5";
+      expected = "25"
+    };
+    { name = "use nullary callback";
+      source = "run_twice = fn(f) { f(); f() }; c = &0; use <- run_twice(); c := @c + 1; @c";
+      expected = "2"
+    };
+    { name = "use multiple callback params";
+      source = "with_pair = fn(f) { f(10, 20) }; use a, b <- with_pair(); a + b";
+      expected = "30"
+    };
+    { name = "use bare identifier call";
+      source = "with_hello = fn(f) { f(\"hello\") }; use s <- with_hello; s + \" world\"";
+      expected = "\"hello world\""
+    };
+    { name = "use chained expressions";
+      source =
+        "step1 = fn(x, f) { f(x + 1) }; step2 = fn(y, f) { f(y * 3) }; use a <- step1(2); use b <- \
+         step2(a); b + 4";
+      expected = "13"
+    };
+    { name = "use inside block";
+      source = "f = fn(cb) { cb(100) }; res = { use x <- f(); x + 1 }; res";
+      expected = "101"
+    };
+    { name = "use resource bracket pattern";
+      source =
+        "bracket = fn(res, release, f) { result = f(res); release(res); result }; cleaned = \
+         &false; ans = { use r <- bracket(\"handle\", fn(h) { cleaned := true }); r + \" used\" }; \
+         [@cleaned, ans]";
+      expected = "[true, \"handle used\"]"
+    }
+  ]
+
 let list_tests =
   [ { name = "empty list literal"; source = "[]"; expected = "[]" };
     { name = "number list"; source = "[1, 2, 3]"; expected = "[1, 2, 3]" };
@@ -476,13 +542,33 @@ let runtime_error_tests =
     { name = "builtin find arity mismatch";
       source = "find(\"abc\")";
       expected = "TypeError: find expected 3 arguments, but got 1"
+    };
+    { name = "deref non-reference error";
+      source = "@42";
+      expected = "TypeError: operator @ cannot apply to type number"
+    };
+    { name = "deref string error";
+      source = "@\"hello\"";
+      expected = "TypeError: operator @ cannot apply to type string"
+    };
+    { name = "walrus non-reference error";
+      source = "42 := 10";
+      expected = "TypeError: operator := cannot apply to type number and number"
+    };
+    { name = "walrus string error";
+      source = "\"str\" := 1";
+      expected = "TypeError: operator := cannot apply to type string and number"
+    };
+    { name = "reference as map key error";
+      source = "%{&1: 2}";
+      expected = "TypeError: reference cannot be used as map keys"
     }
   ]
 
 let all_tests =
   List.map to_ounit_test
     ( arithmetic_tests @ unary_tests @ boolean_logic_tests @ comparison_tests @ string_tests
-    @ variable_tests @ block_tests @ function_tests @ list_tests @ map_tests
+    @ variable_tests @ block_tests @ function_tests @ ref_tests @ use_tests @ list_tests @ map_tests
     @ pattern_matching_tests @ builtin_tests @ runtime_error_tests )
 
 let () = run_test_tt_main ("aloe_suite" >::: all_tests)

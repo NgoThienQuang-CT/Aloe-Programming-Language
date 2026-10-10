@@ -10,11 +10,14 @@ let var_style = { LTerm_style.none with foreground = Some LTerm_style.lcyan }
 let style_of_token = function
   | Parser.FN_KW
   | Parser.MATCH_KW
+  | Parser.WHEN_KW
   | Parser.AND_KW
-  | Parser.OR_KW ->
+  | Parser.OR_KW
+  | Parser.USE_KW ->
       Some kw_style
   | Parser.TRUE_KW
-  | Parser.FALSE_KW ->
+  | Parser.FALSE_KW
+  | Parser.NIL_KW ->
       Some bool_style
   | Parser.INT _
   | Parser.FLOAT _ ->

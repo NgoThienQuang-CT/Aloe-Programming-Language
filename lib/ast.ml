@@ -1,10 +1,14 @@
 type un_op =
   | Not
   | Neg
+  | Ref
+  | Deref
 
 let string_of_un_op = function
   | Not -> "!"
   | Neg -> "-"
+  | Ref -> "&"
+  | Deref -> "@"
 
 type bin_op =
   | Add
@@ -15,11 +19,11 @@ type bin_op =
   | Assign
   | Lss
   | Gtr
+  | Walrus
   | Eql
   | Neq
   | Leq
   | Geq
-  | Pipe
   | And
   | Or
 
@@ -32,11 +36,11 @@ let string_of_bin_op = function
   | Assign -> "="
   | Lss -> "<"
   | Gtr -> ">"
+  | Walrus -> ":="
   | Eql -> "=="
   | Neq -> "!="
   | Leq -> ">="
   | Geq -> "<="
-  | Pipe -> "|>"
   | And -> "and"
   | Or -> "or"
 

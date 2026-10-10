@@ -1,5 +1,4 @@
 module L = MenhirLib.LexerUtil
-module E = MenhirLib.ErrorReports
 module I = Parser.MenhirInterpreter
 
 let red = "\x1b[1;31m"

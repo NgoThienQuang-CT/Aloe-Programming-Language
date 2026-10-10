@@ -23,6 +23,6 @@ let interp ?(filename = "<stdin>") input env =
   | Ok ast -> (
       try
         let v, env' = Eval.eval ast env in
-        (Value.string_of_value v, env')
+        (Value.to_string v, env')
       with
       | Eval.RuntimeError message -> (message, env) )

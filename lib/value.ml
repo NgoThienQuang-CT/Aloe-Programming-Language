@@ -6,6 +6,7 @@ type t =
   | Builtin of builtin
   | List of t list
   | TreeMap of t tree
+  | Ref of t ref
   | Nil
 
 and closure =
@@ -81,6 +82,9 @@ module MapOps = struct
     | (Closure _ | Builtin _), _
     | _, (Closure _ | Builtin _) ->
         raise (InvalidKey "TypeError: functions cannot be used as map keys")
+    | Ref _, _
+    | _, Ref _ ->
+        raise (InvalidKey "TypeError: reference cannot be used as map keys")
     | Nil, _
     | _, Nil ->
         raise (InvalidKey "TypeError: nil cannot be used as map keys")
@@ -160,7 +164,7 @@ let rec equal a b =
   | Builtin x, Builtin y -> x.name = y.name
   | _ -> false
 
-let name_of_value = function
+let rec to_name = function
   | Number _ -> "number"
   | String _ -> "string"
   | Boolean _ -> "boolean"
@@ -168,24 +172,26 @@ let name_of_value = function
   | Builtin _ -> "built-in"
   | List _ -> "list"
   | TreeMap _ -> "map"
+  | Ref _ -> "reference"
   | Nil -> "nil"
 
-let rec string_of_value = function
+let rec to_string = function
   | Number n -> Printf.sprintf "%.16g" n
   | String s -> Printf.sprintf "%S" s
   | Boolean b -> string_of_bool b
   | Closure _ -> "<function>"
   | Builtin b -> Printf.sprintf "<built-in> : %s" b.name
-  | List list -> list |> List.map string_of_value |> String.concat ", " |> Printf.sprintf "[%s]"
+  | List list -> list |> List.map to_string |> String.concat ", " |> Printf.sprintf "[%s]"
   | TreeMap tree ->
       MapOps.fold
         (fun k v acc ->
           let key_str =
             match k with
             | String s -> Printf.sprintf "%S" s
-            | other -> string_of_value other
+            | other -> to_string other
           in
-          Printf.sprintf "%s: %s" key_str (string_of_value v) :: acc )
+          Printf.sprintf "%s: %s" key_str (to_string v) :: acc )
         tree []
       |> List.rev |> String.concat ", " |> Printf.sprintf "%%{%s}"
+  | Ref r -> Printf.sprintf "ref<%s>" (to_string !r)
   | Nil -> "nil"

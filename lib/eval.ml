@@ -31,7 +31,7 @@ let rec eval expr =
           begin match vrest with
           | Value.List vlist -> return (Value.List (velems @ vlist))
           | other ->
-              let name = Value.name_of_value other in
+              let name = Value.to_name other in
               let message = Printf.sprintf "TypeError: spread expects a list, but got '%s'" name in
               raise (RuntimeError message)
           end
@@ -50,7 +50,6 @@ let rec eval expr =
       end
   | Ast.Unary (op, rhs) -> eval_unop op rhs
   | Ast.Binary (Ast.Assign, Ident name, rhs) -> eval_assign name rhs
-  | Ast.Binary (Ast.Pipe, lhs, rhs) -> eval_pipe lhs rhs
   | Ast.Binary (op, lhs, rhs) -> eval_binop op lhs rhs
   | Ast.Block (exprs, trail) -> eval_block exprs trail
   | Ast.Call (func, args) -> apply func args
@@ -69,9 +68,11 @@ and eval_unop op rhs =
     begin match (op, v) with
     | Ast.Not, Value.Boolean b -> Value.Boolean (not b)
     | Ast.Neg, Value.Number n -> Value.Number ~-.n
+    | Ast.Ref, v -> Value.Ref (ref v)
+    | Ast.Deref, Value.Ref r -> !r
     | _ ->
         let op_str = Ast.string_of_un_op op in
-        let v_name = Value.name_of_value v in
+        let v_name = Value.to_name v in
         let message =
           Printf.sprintf "TypeError: operator %s cannot apply to type %s" op_str v_name
         in
@@ -93,14 +94,6 @@ and eval_assign name rhs =
       let* v = eval other in
       let* () = Env.extend_env name v in
       return v
-
-and eval_pipe lhs rhs =
-  let call =
-    match rhs with
-    | Ast.Call (func, args) -> Ast.Call (func, lhs :: args)
-    | other -> Ast.Call (other, [ lhs ])
-  in
-  eval call
 
 and eval_binop op lhs rhs =
   let* vl = eval lhs in
@@ -127,10 +120,13 @@ and eval_binop op lhs rhs =
     | Ast.Neq, _, _ -> Value.Boolean (not (Value.equal vl vr))
     | Ast.And, Value.Boolean a, Value.Boolean b -> Value.Boolean (a && b)
     | Ast.Or, Value.Boolean a, Value.Boolean b -> Value.Boolean (a || b)
+    | Ast.Walrus, Value.Ref a, b ->
+        a := b;
+        b
     | _ ->
         let op_str = Ast.string_of_bin_op op in
-        let vl_name = Value.name_of_value vl in
-        let vr_name = Value.name_of_value vr in
+        let vl_name = Value.to_name vl in
+        let vr_name = Value.to_name vr in
         let message =
           Printf.sprintf "TypeError: operator %s cannot apply to type %s and %s" op_str vl_name
             vr_name
@@ -178,7 +174,7 @@ and eval_index target index =
   | Value.String str -> eval_string_index str vindex
   | Value.TreeMap map -> eval_map_index map vindex
   | _ ->
-      let vtarget_name = Value.string_of_value vtarget in
+      let vtarget_name = Value.to_string vtarget in
       let message = Printf.sprintf "TypeError: type %s is not indexable" vtarget_name in
       raise (RuntimeError message)
 
@@ -191,7 +187,7 @@ and eval_list_index list = function
       if 0 <= idx && idx < len then return (List.nth list idx) else return Value.Nil
   | Value.Number _ -> raise (RuntimeError "TypeError: list index must be an integer")
   | other ->
-      let vindex_name = Value.string_of_value other in
+      let vindex_name = Value.to_string other in
       let message = Printf.sprintf "TypeError: list index must be a number, get %s" vindex_name in
       raise (RuntimeError message)
 
@@ -205,7 +201,7 @@ and eval_string_index str = function
       else return Value.Nil
   | Value.Number _ -> raise (RuntimeError "TypeError: string index must be an integer")
   | other ->
-      let vindex_name = Value.string_of_value other in
+      let vindex_name = Value.to_string other in
       let message = Printf.sprintf "TypeError: string index must be a number, get %s" vindex_name in
       raise (RuntimeError message)
 
@@ -251,7 +247,7 @@ and guard_check guard =
       match vguard with
       | Value.Boolean b -> return b
       | _ ->
-          let vguard_name = Value.name_of_value vguard in
+          let vguard_name = Value.to_name vguard in
           let message =
             Printf.sprintf "TypeError: match guard must evaluate to a boolean, but got %s"
               vguard_name

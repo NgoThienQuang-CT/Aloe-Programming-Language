@@ -23,11 +23,15 @@
 %token LSS
 %token GTR
 %token BAR
+%token AMPERSAND
+%token ATSIGN
+%token WALRUS
 %token EQL
 %token NEQ
 %token LEQ
 %token GEQ
-%token ARROW
+%token RARROW
+%token LARROW
 %token PIPE
 %token PERCENT_LCURLY
 %token EOF
@@ -39,6 +43,7 @@
 %token NIL_KW
 %token OR_KW
 %token TRUE_KW
+%token USE_KW
 %token WHEN_KW
 
 %token <string> IDENT
@@ -48,7 +53,7 @@
 
 %token NEG /* pseudo token for unary minus */
 
-%right ASSIGN
+%right ASSIGN WALRUS
 %left PIPE
 %left OR_KW
 %left AND_KW
@@ -56,7 +61,7 @@
 %left LSS GTR LEQ GEQ
 %left ADD SUB
 %left MUL DIV REM
-%right NOT NEG
+%right NOT NEG AMPERSAND ATSIGN
 
 %start <Ast.expr> prog
 
@@ -78,6 +83,8 @@ block:
       }
   ;
 
+// It's statements, but since Aloe is all expressions,
+// I named the rule expr_list
 expr_list:
   | /**/
       { ([], None) }
@@ -88,7 +95,18 @@ expr_list:
         let (exprs, tail) = rest in
         (e :: exprs, tail)
       }
-
+  | USE_KW; params = separated_list(COMMA, IDENT); LARROW; call = postfix_expr; SEMICOLON; rest = expr_list
+      {
+        let (exprs, tail) = rest in
+        let body = Block (exprs, tail) in
+        let callback = Func (params, body) in
+        let full = match call with
+          | Call (func, args) -> Call (func, args @ [callback])
+          | other -> Call (other, [callback])
+        in
+        ([], Some full)
+      }
+  ;
 expr:
   | lhs = expr; ADD; rhs = expr
       { Binary (Add, lhs, rhs) }
@@ -118,12 +136,22 @@ expr:
       { Binary (And, lhs, rhs) }
   | lhs = expr; OR_KW; rhs = expr
       { Binary (Or, lhs, rhs) }
+  | lhs = expr; WALRUS; rhs = expr
+      { Binary (Walrus, lhs, rhs) }
   | lhs = expr; PIPE; rhs = expr
-      { Binary (Pipe, lhs, rhs) }
+      {
+        match rhs with
+        | Call (func, args) -> Call (func, lhs :: args)
+        | other -> Call (other, [lhs])
+      }
   | NOT; e = expr
       { Unary (Not, e) }
   | SUB; e = expr %prec NEG
       { Unary (Neg, e)}
+  | AMPERSAND; e = expr
+      { Unary (Ref, e) }
+  | ATSIGN; e = expr
+      { Unary (Deref, e) }
   | e = postfix_expr
       { e }
   ;
@@ -188,7 +216,7 @@ match_arms:
   ;
 
 match_arm:
-  | pat = pattern; guard = option(guard); ARROW; res = expr
+  | pat = pattern; guard = option(guard); RARROW; res = expr
       { { pat; guard; res } }
   ;
 

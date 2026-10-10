@@ -8,7 +8,7 @@ let error_arity name expected got =
   raise (Eval.RuntimeError message)
 
 let error_unsupported_type name v =
-  let v_name = Value.name_of_value v in
+  let v_name = Value.to_name v in
   let message =
     Printf.sprintf "TypeError: %s was not supported for argument of type '%s'" name v_name
   in
@@ -22,7 +22,7 @@ let error_argument_type name pos expected v =
     | 3 -> "third"
     | n -> string_of_int n ^ "th"
   in
-  let v_name = Value.name_of_value v in
+  let v_name = Value.to_name v in
   let message =
     Printf.sprintf "TypeError: %s expects a %s as %s argument, but got '%s'" name expected pos_str
       v_name
@@ -34,7 +34,7 @@ let builtin_println = function
       print_endline string;
       Value.Nil
   | [ v ] ->
-      print_endline (Value.string_of_value v);
+      print_endline (Value.to_string v);
       Value.Nil
   | args -> error_arity "println" 1 (List.length args)
 
@@ -67,7 +67,7 @@ let builtin_to_list = function
   | args -> error_arity "to_list" 1 (List.length args)
 
 let builtin_type = function
-  | [ v ] -> Value.String (Value.name_of_value v)
+  | [ v ] -> Value.String (Value.to_name v)
   | args -> error_arity "type" 1 (List.length args)
 
 let builtin_load get_env = function
@@ -83,7 +83,7 @@ let builtin_load get_env = function
           v
       end
   | [ other ] ->
-      let name = Value.name_of_value other in
+      let name = Value.to_name other in
       let message = Printf.sprintf "TypeError: load expects a string path, but got '%s'" name in
       raise (Eval.RuntimeError message)
   | args -> error_arity "load" 1 (List.length args)
@@ -116,7 +116,7 @@ let join_string sep list =
     | [] -> String.concat sep (List.rev acc)
     | Value.String s :: ss' -> join_string_aux (s :: acc) ss'
     | other :: _ ->
-        let name = Value.name_of_value other in
+        let name = Value.to_name other in
         let msg =
           Printf.sprintf "TypeError: join expects a list of strings, but got element of type '%s'"
             name

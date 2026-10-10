@@ -24,6 +24,7 @@
       ("nil",   NIL_KW);
       ("or",    OR_KW);
       ("true",  TRUE_KW);
+      ("use",   USE_KW);
       ("when",  WHEN_KW);
     ]
 }
@@ -57,11 +58,15 @@ rule read =
   | "<"  { LSS }
   | ">"  { GTR }
   | "|"  { BAR }
+  | "&"  { AMPERSAND }
+  | "@"  { ATSIGN }
+  | ":=" { WALRUS }
   | "==" { EQL }
   | "!=" { NEQ }
   | "<=" { LEQ }
   | ">=" { GEQ }
-  | "->" { ARROW }
+  | "->" { RARROW }
+  | "<-" { LARROW }
   | "|>" { PIPE }
   | "%{" { PERCENT_LCURLY }
   | ".." { DOTDOT }
