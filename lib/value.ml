@@ -6,11 +6,12 @@ type t =
   | Builtin of builtin
   | List of t list
   | TreeMap of t tree
-  | Ref of t ref
+  | Ref of int * t ref
   | Nil
 
 and closure =
-  { params : string list;
+  { id : int;
+    params : string list;
     fn_blk : Ast.expr;
     fn_env : t Env.t
   }
@@ -31,6 +32,8 @@ and 'v tree =
       }
 
 exception InvalidKey of string
+
+let ( ?: ) x y = if x <> 0 then x else y
 
 module MapOps = struct
   let empty = Empty
@@ -67,27 +70,56 @@ module MapOps = struct
       | _ -> rotate_l tree
     else tree
 
+  let to_list tree =
+    let rec aux acc = function
+      | Empty -> acc
+      | Node { k; v; l; r; _ } -> aux ((k, v) :: aux acc r) l
+    in
+    aux [] tree
+
+  let type_rank = function
+    | Nil -> 0
+    | Boolean _ -> 1
+    | Number _ -> 2
+    | String _ -> 3
+    | List _ -> 4
+    | TreeMap _ -> 5
+    | Ref _ -> 6
+    | Closure _ -> 7
+    | Builtin _ -> 8
+
   let rec compare a b =
     match (a, b) with
+    | Nil, Nil -> 0
     | Number x, Number y -> Float.compare x y
     | String x, String y -> String.compare x y
     | Boolean x, Boolean y -> Bool.compare x y
-    | Boolean _, (Number _ | String _) -> -1
-    | (Number _ | String _), Boolean _ -> 1
-    | Number _, String _ -> -1
-    | String _, Number _ -> 1
-    | (List _ | TreeMap _), _
-    | _, (List _ | TreeMap _) ->
-        raise (InvalidKey "TypeError: composite types cannot be used as map keys")
-    | (Closure _ | Builtin _), _
-    | _, (Closure _ | Builtin _) ->
-        raise (InvalidKey "TypeError: functions cannot be used as map keys")
-    | Ref _, _
-    | _, Ref _ ->
-        raise (InvalidKey "TypeError: reference cannot be used as map keys")
-    | Nil, _
-    | _, Nil ->
-        raise (InvalidKey "TypeError: nil cannot be used as map keys")
+    | List xs, List ys ->
+        let rec cmp_lst xs ys =
+          match (xs, ys) with
+          | [], [] -> 0
+          | [], _ -> -1
+          | _, [] -> 1
+          | x :: xs', y :: ys' -> ?:(compare x y) (cmp_lst xs' ys')
+        in
+        cmp_lst xs ys
+    | TreeMap tx, TreeMap ty ->
+        let rec cmp_kv exs eys =
+          match (exs, eys) with
+          | [], [] -> 0
+          | [], _ -> -1
+          | _, [] -> 1
+          | (kx, vx) :: exs', (ky, vy) :: eys' ->
+              ?:(compare kx ky) @@ ?:(compare vx vy) (cmp_kv exs' eys')
+        in
+        cmp_kv (to_list tx) (to_list ty)
+    | Ref (id, _), Ref (id', _) -> Int.compare id id'
+    | Builtin a, Builtin b -> String.compare a.name b.name
+    | Closure a, Closure b -> Int.compare a.id b.id
+    | _ ->
+        let ra = type_rank a in
+        let rb = type_rank b in
+        ?:(ra - rb) (Int.compare ra rb)
 
   let to_list tree =
     let rec aux acc = function
@@ -193,5 +225,5 @@ let rec to_string = function
           Printf.sprintf "%s: %s" key_str (to_string v) :: acc )
         tree []
       |> List.rev |> String.concat ", " |> Printf.sprintf "%%{%s}"
-  | Ref r -> Printf.sprintf "ref<%s>" (to_string !r)
+  | Ref (_, r) -> Printf.sprintf "ref<%s>" (to_string !r)
   | Nil -> "nil"

@@ -11,6 +11,18 @@ let lookup name =
       let message = Printf.sprintf "NameError: variable %s is not defined" name in
       raise (RuntimeError message)
 
+let fn_id_counter = ref 0
+
+let make_closure params fn_blk fn_env =
+  incr fn_id_counter;
+  Value.Closure { id = !fn_id_counter; params; fn_blk; fn_env }
+
+let ref_id_counter = ref 0
+
+let make_reference value =
+  incr ref_id_counter;
+  Value.Ref (!ref_id_counter, ref value)
+
 let rec eval expr =
   match expr with
   | Ast.Prog (exprs, trail) -> eval_prog exprs trail
@@ -21,7 +33,7 @@ let rec eval expr =
   | Ast.Boolean bool -> return (Value.Boolean bool)
   | Ast.Func (params, fn_blk) ->
       let* fn_env = Env.get_env in
-      return (Value.Closure { params; fn_blk; fn_env })
+      return (make_closure params fn_blk fn_env)
   | Ast.List (elems, rest) ->
       let* velems = Env.map_m eval elems in
       begin match rest with
@@ -68,8 +80,8 @@ and eval_unop op rhs =
     begin match (op, v) with
     | Ast.Not, Value.Boolean b -> Value.Boolean (not b)
     | Ast.Neg, Value.Number n -> Value.Number ~-.n
-    | Ast.Ref, v -> Value.Ref (ref v)
-    | Ast.Deref, Value.Ref r -> !r
+    | Ast.Ref, v -> make_reference v
+    | Ast.Deref, Value.Ref (_, r) -> !r
     | _ ->
         let op_str = Ast.string_of_un_op op in
         let v_name = Value.to_name v in
@@ -83,10 +95,12 @@ and eval_assign name rhs =
   match rhs with
   | Ast.Func (params, fn_blk) ->
       let* outer_env = Env.get_env in
+      incr fn_id_counter;
+      let id = !fn_id_counter in
       let rec func =
         (* Make func include itself in the environment to support recursion. *)
         let fn_env = (name, func) :: outer_env in
-        Value.Closure { params; fn_blk; fn_env }
+        Value.Closure { id; params; fn_blk; fn_env }
       in
       let* () = Env.extend_env name func in
       return func
@@ -120,7 +134,7 @@ and eval_binop op lhs rhs =
     | Ast.Neq, _, _ -> Value.Boolean (not (Value.equal vl vr))
     | Ast.And, Value.Boolean a, Value.Boolean b -> Value.Boolean (a && b)
     | Ast.Or, Value.Boolean a, Value.Boolean b -> Value.Boolean (a || b)
-    | Ast.Walrus, Value.Ref a, b ->
+    | Ast.Walrus, Value.Ref (_, a), b ->
         a := b;
         b
     | _ ->

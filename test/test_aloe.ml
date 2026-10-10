@@ -231,6 +231,48 @@ let map_tests =
     { name = "map dot syntax nested";
       source = "%{\"user\": %{\"name\": \"Alice\"}}.user.name";
       expected = "\"Alice\""
+    };
+    { name = "map with list key";
+      source = "%{[1, 2]: \"coords\"}[[1, 2]]";
+      expected = "\"coords\""
+    };
+    { name = "map with empty list key"; source = "%{[]: \"empty\"}[[]]"; expected = "\"empty\"" };
+    { name = "map with map key";
+      source = "%{%{\"a\": 1}: \"nested\"}[%{\"a\": 1}]";
+      expected = "\"nested\""
+    };
+    { name = "map with nil key"; source = "%{nil: \"nothing\"}[nil]"; expected = "\"nothing\"" };
+    { name = "map with ref key same ref";
+      source = "r = &1; m = %{r: \"ref_val\"}; m[r]";
+      expected = "\"ref_val\""
+    };
+    { name = "map with ref key diff ref";
+      source = "r1 = &1; r2 = &1; m = %{r1: \"one\"}; m[r2]";
+      expected = "nil"
+    };
+    { name = "map with function key";
+      source = "f = fn(x) { x }; m = %{f: \"identity\"}; m[f]";
+      expected = "\"identity\""
+    };
+    { name = "map with builtin key";
+      source = "m = %{len: \"builtin_len\"}; m[len]";
+      expected = "\"builtin_len\""
+    };
+    { name = "map with mixed keys";
+      source =
+        "m = %{1: \"num\", \"a\": \"str\", [1]: \"list\", nil: \"nil\"}; [m[1], m[\"a\"], m[[1]], \
+         m[nil]]";
+      expected = "[\"num\", \"str\", \"list\", \"nil\"]"
+    };
+    { name = "map put composite key"; source = "put(%{}, [1, 2], 42)[[1, 2]]"; expected = "42" };
+    { name = "map delete composite key"; source = "delete(%{[1]: 10}, [1])"; expected = "%{}" };
+    { name = "map equality with composite keys";
+      source = "%{[1]: \"a\"} == %{[1]: \"a\"}";
+      expected = "true"
+    };
+    { name = "map inequality with composite keys";
+      source = "%{[1]: \"a\"} != %{[2]: \"a\"}";
+      expected = "true"
     }
   ]
 
@@ -435,14 +477,6 @@ let runtime_error_tests =
       source = "100[0]";
       expected = "TypeError: type 100 is not indexable"
     };
-    { name = "composite key in map error";
-      source = "%{[1]: 2}";
-      expected = "TypeError: composite types cannot be used as map keys"
-    };
-    { name = "function key in map error";
-      source = "%{fn(x) { x }: 1}";
-      expected = "TypeError: functions cannot be used as map keys"
-    };
     { name = "builtin arity mismatch single argument";
       source = "println(1, 2)";
       expected = "TypeError: println expected 1 argument, but got 2"
@@ -558,10 +592,6 @@ let runtime_error_tests =
     { name = "walrus string error";
       source = "\"str\" := 1";
       expected = "TypeError: operator := cannot apply to type string and number"
-    };
-    { name = "reference as map key error";
-      source = "%{&1: 2}";
-      expected = "TypeError: reference cannot be used as map keys"
     }
   ]
 
